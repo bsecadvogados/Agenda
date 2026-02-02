@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BSC Advogados | Calendário Estratégico Agro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --gold: #c5a059;
+            --white: #ffffff;
+            --glass: rgba(0, 0, 0, 0.85);
+            --border: rgba(197, 160, 89, 0.3);
+            --event-blue: rgba(0, 120, 215, 0.1);
+            --event-border: #0078d7;
+        }
+
+        body, html {
+            margin: 0; padding: 0; min-height: 100vh;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--white); background-color: #111;
+        }
+
+        /* Imagens do Banco de Dados Agro */
+        #dynamicBg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover; background-position: center;
+            z-index: -2;
+            background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1920');
+        }
+
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.6), rgba(0,0,0,0.9));
+            z-index: -1;
+        }
+
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 0; border-bottom: 1px solid var(--border); margin-bottom: 30px;
+        }
+        .logo-box { display: flex; align-items: center; gap: 15px; }
+        .logo-box img { height: 50px; }
+
+        /* Organograma */
+        .socio-grid { display: flex; justify-content: center; gap: 20px; margin-bottom: 30px; }
+        .card-socio {
+            background: var(--glass); padding: 15px; border-radius: 15px;
+            border: 1px solid var(--border); width: 180px; text-align: center; backdrop-filter: blur(10px);
+        }
+        .photo-frame {
+            width: 90px; height: 90px; border-radius: 50%; margin: 0 auto 10px;
+            border: 2px solid var(--gold); overflow: hidden;
+        }
+        .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+        .card-socio h3 { font-family: 'Playfair Display', serif; color: var(--gold); margin: 5px 0; font-size: 1rem; }
+        .card-socio p { font-size: 0.6rem; text-transform: uppercase; margin: 0; opacity: 0.7; }
+
+        /* Grade do Calendário (Estilo Imagem Fornecida) */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            backdrop-filter: blur(15px);
+        }
+
+        .calendar-day-head {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            border-bottom: 1px solid var(--border);
+            color: var(--gold);
+        }
+
+        .calendar-cell {
+            min-height: 150px;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            position: relative;
+        }
+
+        .day-number {
+            position: absolute; top: 5px; right: 10px;
+            font-size: 0.8rem; opacity: 0.5;
+        }
+
+        /* Eventos dentro do Calendário */
+        .event-box {
+            background: var(--event-blue);
+            border: 1px solid var(--event-border);
+            border-radius: 4px;
+            padding: 5px;
+            margin-top: 20px;
+            font-size: 0.7rem;
+            line-height: 1.2;
+            margin-bottom: 5px;
+        }
+
+        .event-box strong { display: block; color: var(--gold); margin-bottom: 2px; }
+        .event-time { font-size: 0.6rem; opacity: 0.8; }
+    </style>
+</head>
+<body>
+
+    <div id="dynamicBg"></div>
+    <div class="overlay"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo-box">
+                <img src="logo.png" alt="Logo BSC">
+                <div class="brand-h">
+                    <h1 style="margin:0; font-size: 1.4rem;">BSC ADVOGADOS</h1>
+                    <p style="margin:0; color:var(--gold); font-size:0.6rem; letter-spacing:2px;">DIREITO AGRÁRIO & AGRONEGÓCIO</p>
+                </div>
+            </div>
+            <div id="date-display" style="color: var(--gold); font-weight: bold;">Fevereiro 2026</div>
+        </header>
+
+        <section class="socio-grid">
+            <div class="card-socio">
+                <div class="photo-frame"><img src="giovani.jpg" alt="Dr. Giovani"></div>
+                <h3>Dr. Giovani</h3>
+                <p>Sócio Proprietário</p>
+            </div>
+            <div class="card-socio">
+                <div class="photo-frame"><img src="abimael.jpg" alt="Dr. Abimael"></div>
+                <h3>Dr. Abimael</h3>
+                <p>Sócio Proprietário</p>
+            </div>
+            <div class="card-socio">
+                <div class="photo-frame"><img src="pamella.jpg" alt="Dra. Pamella"></div>
+                <h3>Dra. Pamella</h3>
+                <p>Sócia Proprietária</p>
+            </div>
+        </section>
+
+        <div class="calendar-grid">
+            <div class="calendar-day-head">Domingo</div>
+            <div class="calendar-day-head">Segunda</div>
+            <div class="calendar-day-head">Terça</div>
+            <div class="calendar-day-head">Quarta</div>
+            <div class="calendar-day-head">Quinta</div>
+            <div class="calendar-day-head">Sexta</div>
+            <div class="calendar-day-head">Sábado</div>
+
+            <div class="calendar-cell"><span class="day-number">1</span></div>
+            
+            <div class="calendar-cell">
+                <span class="day-number">2</span>
+                <div class="event-box">
+                    <strong>Audiência de Conciliação</strong>
+                    <span>Rafael Zanini x Antonio Mendes</span>
+                    <div class="event-time">09:15</div>
+                </div>
+                <div class="event-box">
+                    <strong>Realização de defesa prévia</strong>
+                    <span>TRANSPORTE BRAGA BORGES</span>
+                    <div class="event-time">15:30</div>
+                </div>
+                <div class="event-box">
+                    <strong>Impugnar Cumprimento</strong>
+                    <span>TAUILE x SANNA</span>
+                    <div class="event-time">16:30</div>
+                </div>
+            </div>
+
+            <div class="calendar-cell"><span class="day-number">3</span></div>
+
+            <div class="calendar-cell">
+                <span class="day-number">4</span>
+                <div class="event-box">
+                    <strong>Reunião BNI Jalapão</strong>
+                    <span>Networking Profissional</span>
+                    <div class="event-time">07:00</div>
+                </div>
+            </div>
+
+            <div class="calendar-cell"><span class="day-number">5</span></div>
+
+            <div class="calendar-cell">
+                <span class="day-number">6</span>
+                <div class="event-box">
+                    <strong>Inauguração Escritório AUBE</strong>
+                    <span>Evento Institucional</span>
+                    <div class="event-time">Dia inteiro</div>
+                </div>
+                <div class="event-box">
+                    <strong>Informar novo endereço</strong>
+                    <span>ZANINI x ANTONIO CARLOS</span>
+                    <div class="event-time">08:30</div>
+                </div>
+            </div>
+
+            <div class="calendar-cell">
+                <span class="day-number">7</span>
+                <div class="event-box">
+                    <strong>Dia de Campo - OILEMA</strong>
+                    <span>Setor Agronegócio</span>
+                    <div class="event-time">Dia inteiro</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
