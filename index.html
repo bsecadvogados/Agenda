@@ -3,131 +3,263 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BSC Advogados | Enterprise Legal Management</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>BSC Advogados | Enterprise Legal Management System v3.0</title>
     
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        :root { --gold: #c5a059; --gold-dark: #a38446; --bg-black: #050505; }
-        body { font-family: 'Montserrat', sans-serif; background-color: var(--bg-black); color: #fff; overflow-x: hidden; }
-        
-        /* Layout Glassmorphism Profissional */
-        .glass-panel {
-            background: rgba(15, 15, 15, 0.9);
-            backdrop-filter: blur(25px);
+        /* * BSC ADVOGADOS - STYLE SYSTEM v3.0 
+         * Definindo paleta de cores institucional e efeitos de profundidade
+         */
+        :root {
+            --bsc-gold: #c5a059;
+            --bsc-gold-dark: #a38446;
+            --bsc-black: #050505;
+            --bsc-glass: rgba(15, 15, 15, 0.95);
+            --transition-smooth: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bsc-black);
+            color: #ffffff;
+            margin: 0;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* BACKGROUND AGRO DINÂMICO */
+        .agro-hero {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.92), rgba(0,0,0,0.75), rgba(0,0,0,1)), 
+                              url('Agro Expert Group — helping you get the harvest.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            z-index: -1;
+            transition: var(--transition-smooth);
+        }
+
+        /* GLASSMORPHISM ENTERPRISE */
+        .glass-container {
+            background: var(--bsc-glass);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
             border: 1px solid rgba(197, 160, 89, 0.15);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border-radius: 1.5rem;
         }
 
-        .hero-bg {
-            background-image: linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(0,0,0,0.6)), 
-                              url('https://images.unsplash.com/photo-1453928582365-b6ad33cbcf64?q=80&w=2073');
-            background-size: cover; background-position: center; background-attachment: fixed;
+        /* ANIMAÇÕES DE CARREGAMENTO */
+        @keyframes bscPulse {
+            0% { opacity: 0.3; transform: scale(0.98); }
+            50% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0.3; transform: scale(0.98); }
         }
 
-        .status-pill { font-[10px] uppercase font-bold px-3 py-1 rounded-full tracking-widest; }
+        #bsc-loader {
+            background-color: var(--bsc-black);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s ease-out, visibility 1s;
+        }
+
+        .loader-text {
+            font-family: 'Playfair Display', serif;
+            color: var(--bsc-gold);
+            letter-spacing: 0.2em;
+            animation: bscPulse 2s infinite;
+        }
+
+        /* SISTEMA DE STATUS */
+        .status-pill {
+            font-size: 9px;
+            font-weight: 800;
+            padding: 5px 12px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transition: var(--transition-smooth);
+        }
+
         .status-pendente { background: rgba(156, 163, 175, 0.15); color: #9ca3af; border: 1px solid rgba(156, 163, 175, 0.3); }
         .status-iniciado { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3); }
         .status-concluido { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
         .status-urgente { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
 
-        .task-card { transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); cursor: grab; }
-        .task-card:hover { transform: translateY(-5px); border-color: var(--gold); }
-        .drop-zone-active { background: rgba(197, 160, 89, 0.05) !important; border: 2px dashed var(--gold) !important; }
+        /* CARDS DE TAREFAS */
+        .task-card {
+            cursor: grab;
+            transition: var(--transition-smooth);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
 
-        .sidebar-item:hover i { color: var(--gold); transform: scale(1.2); }
+        .task-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--bsc-gold);
+            background: rgba(197, 160, 89, 0.03);
+        }
+
+        .task-card:active { cursor: grabbing; }
+
+        /* ZONAS DE SOLTURA (DROP ZONES) */
+        .drop-zone { transition: var(--transition-smooth); }
+        .drop-zone-active { 
+            background: rgba(197, 160, 89, 0.12) !important; 
+            border: 2px dashed var(--bsc-gold) !important;
+            transform: scale(1.05);
+        }
+
         .hidden { display: none; }
+        
+        /* CUSTOM SCROLLBAR */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bsc-black); }
+        ::-webkit-scrollbar-thumb { background: var(--bsc-gold); border-radius: 10px; }
     </style>
 </head>
-<body class="hero-bg min-h-screen">
+<body class="min-h-screen">
 
-    <div id="loader" class="fixed inset-0 bg-black z-[100] flex items-center justify-center transition-opacity duration-1000">
-        <div class="text-center">
-            <h1 class="text-4xl font-serif text-[#c5a059] animate-pulse">BSC ADVOGADOS</h1>
-            <p class="text-[10px] tracking-[0.5em] mt-2 opacity-40 uppercase">Carregando Inteligência</p>
+    <div class="agro-hero"></div>
+
+    <div id="bsc-loader" class="fixed inset-0">
+        <h1 class="loader-text text-5xl font-bold">BSC ADVOGADOS</h1>
+        <div class="w-48 h-1 bg-white/5 mt-6 rounded-full overflow-hidden">
+            <div id="loader-progress" class="h-full bg-[#c5a059] w-0 transition-all duration-500"></div>
         </div>
+        <p class="text-[9px] uppercase tracking-[0.6em] mt-4 opacity-30">Iniciando Protocolos Jurídicos</p>
     </div>
 
-    <section id="login-module" class="flex items-center justify-center min-h-screen px-4">
-        <div class="glass-panel p-12 w-full max-w-lg text-center relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#c5a059] to-transparent"></div>
-            <img src="logo.png" alt="BSC" class="h-28 mx-auto mb-8">
-            <h2 class="text-xs font-bold mb-10 tracking-[0.6em] uppercase text-gray-500">Acesso Restrito ao Sistema</h2>
+    <section id="login-module" class="flex items-center justify-center min-h-screen p-4 hidden">
+        <div class="glass-container p-12 w-full max-w-lg text-center relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-transparent via-[#c5a059] to-transparent"></div>
+            
+            <img src="logo.png" alt="BSC Advogados" class="h-32 mx-auto mb-10 drop-shadow-2xl">
             
             <div class="space-y-6 text-left">
-                <div>
-                    <label class="text-[9px] uppercase text-[#c5a059] font-bold tracking-widest ml-1">Usuário Autorizado</label>
-                    <select id="user-select" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl outline-none focus:border-[#c5a059] transition text-sm text-white appearance-none">
-                        <option value="BSC_GERAL" class="bg-neutral-900">BSC ADVOGADOS (ADMIN MASTER)</option>
-                        <option value="IM" class="bg-neutral-900">Iago Manguary (Controller)</option>
-                        <option value="AF" class="bg-neutral-900">Abimael Francisco (Sócio)</option>
-                        <option value="PS" class="bg-neutral-900">Pamella Sakumoto (Sócia)</option>
-                        <option value="GB" class="bg-neutral-900">Giovani Barcellos (Sócio)</option>
-                        <option value="GE" class="bg-neutral-900">Geovana Alexassandra (Advogada)</option>
-                        <option value="FS" class="bg-neutral-900">Felipe dos Santos (Advogado)</option>
-                    </select>
+                <div class="group">
+                    <label class="text-[9px] uppercase text-[#c5a059] font-extrabold tracking-[0.3em] mb-2 block ml-1">Perfil de Acesso</label>
+                    <div class="relative">
+                        <select id="user-select" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl outline-none focus:border-[#c5a059] transition text-sm appearance-none cursor-pointer">
+                            <option value="BSC_GERAL" class="bg-neutral-900">ADMINISTRAÇÃO (Master)</option>
+                            <option value="IM" class="bg-neutral-900">Iago Manguary (Controller)</option>
+                            <option value="AF" class="bg-neutral-900">Abimael Francisco (Sócio)</option>
+                            <option value="PS" class="bg-neutral-900">Pamella Sakumoto (Sócia)</option>
+                            <option value="GB" class="bg-neutral-900">Giovani Barcellos (Sócio)</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-[#c5a059] pointer-events-none"></i>
+                    </div>
                 </div>
+
                 <div>
-                    <label class="text-[9px] uppercase text-[#c5a059] font-bold tracking-widest ml-1">Chave de Segurança</label>
+                    <label class="text-[9px] uppercase text-[#c5a059] font-extrabold tracking-[0.3em] mb-2 block ml-1">Chave de Segurança</label>
                     <input type="password" id="user-pass" placeholder="••••••••" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl outline-none focus:border-[#c5a059] transition text-sm">
                 </div>
-                <button onclick="AuthController.login()" class="w-full bg-gradient-to-r from-[#c5a059] to-[#a38446] text-black font-bold py-4 rounded-xl hover:brightness-125 transition uppercase text-[10px] tracking-[0.3em] shadow-2xl">
-                    Autenticar na Rede
+
+                <button onclick="AuthController.login()" class="w-full bg-gradient-to-r from-[#c5a059] to-[#a38446] text-black font-black py-5 rounded-xl hover:scale-[1.02] transition-all uppercase text-[11px] tracking-[0.4em] shadow-2xl mt-4">
+                    Autenticar no Sistema
                 </button>
             </div>
+            
+            <p class="mt-12 text-[8px] opacity-20 uppercase tracking-[0.4em]">Acesso restrito à rede interna BSC Advogados Associados</p>
         </div>
     </section>
 
-    <main id="main-dashboard" class="hidden min-h-screen">
-        <aside class="fixed left-0 top-0 h-full w-24 glass-panel border-r border-white/5 flex flex-col items-center py-10 z-50">
-            <div class="mb-16 font-serif text-xl text-[#c5a059]">BSC</div>
-            <div class="flex flex-col gap-10">
-                <button class="sidebar-item"><i class="fa-solid fa-layer-group text-xl transition-all"></i></button>
-                <button class="sidebar-item text-gray-600"><i class="fa-solid fa-gavel text-xl transition-all"></i></button>
-                <button class="sidebar-item text-gray-600"><i class="fa-solid fa-wheat-awn text-xl transition-all"></i></button>
-                <button class="sidebar-item text-gray-600"><i class="fa-solid fa-chart-pie text-xl transition-all"></i></button>
-            </div>
-            <button onclick="AuthController.logout()" class="mt-auto text-gray-600 hover:text-red-500"><i class="fa-solid fa-power-off text-xl"></i></button>
-        </aside>
-
-        <section class="pl-32 pr-10 py-10">
-            <header class="flex justify-between items-end mb-16 border-b border-white/5 pb-10">
-                <div class="flex items-center gap-6">
-                    <div class="relative">
-                        <img id="header-avatar" src="" class="w-24 h-24 rounded-full border-2 border-[#c5a059] object-cover">
-                        <div class="absolute bottom-1 right-1 w-5 h-5 bg-green-500 border-4 border-[#050505] rounded-full"></div>
-                    </div>
-                    <div>
-                        <h1 id="display-user-name" class="text-4xl font-bold tracking-tighter italic">Dr. Nome Usuário</h1>
-                        <p id="display-user-role" class="text-[10px] text-[#c5a059] uppercase tracking-[0.5em] font-semibold mt-1">Cargo Corporativo</p>
-                    </div>
+    <main id="main-dashboard" class="hidden min-h-screen p-8 lg:p-12 animate-fade">
+        <header class="flex flex-col lg:flex-row justify-between items-center mb-16 border-b border-white/10 pb-12 gap-10">
+            <div class="flex items-center gap-8">
+                <div class="relative">
+                    <img id="header-avatar" src="" class="w-28 h-28 rounded-full border-2 border-[#c5a059] object-cover shadow-2xl shadow-gold/20">
+                    <div class="absolute bottom-2 right-2 w-6 h-6 bg-green-500 border-4 border-[#050505] rounded-full"></div>
                 </div>
-                <div class="text-right">
-                    <p id="clock-display" class="text-3xl font-light tracking-tighter mb-1">00:00:00</p>
-                    <p class="text-[10px] opacity-40 uppercase tracking-widest" id="full-date">Carregando Data...</p>
+                <div>
+                    <h1 id="display-user-name" class="text-4xl font-extrabold tracking-tighter italic lg:text-5xl">Dr. Usuário</h1>
+                    <p id="display-user-role" class="text-[#c5a059] text-[11px] uppercase tracking-[0.6em] font-bold mt-2">Cargo Institucional</p>
                 </div>
-            </header>
-
-            <div class="mb-12">
-                <h3 class="text-[10px] uppercase tracking-[0.4em] text-[#c5a059] mb-8 font-bold">Gestão & Sócios Proprietários</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6" id="team-grid"></div>
             </div>
 
-            <div class="flex justify-between items-center mb-10">
-                <h3 class="text-[10px] uppercase tracking-[0.4em] text-[#c5a059] font-bold italic">Agenda Fevereiro 2026</h3>
+            <div class="flex items-center gap-12 bg-white/5 p-6 rounded-2xl border border-white/5">
+                <div class="text-center">
+                    <p id="clock-display" class="text-4xl font-light tracking-tighter text-white/90">00:00:00</p>
+                    <p class="text-[9px] opacity-40 uppercase tracking-[0.4em] mt-1" id="full-date">Data...</p>
+                </div>
+                <div class="h-12 w-[1px] bg-white/10"></div>
+                <button onclick="AuthController.logout()" class="group flex flex-col items-center gap-2">
+                    <div class="w-12 h-12 rounded-full flex items-center justify-center bg-red-500/10 border border-red-500/20 group-hover:bg-red-500 transition-all">
+                        <i class="fa-solid fa-power-off text-red-500 group-hover:text-white"></i>
+                    </div>
+                    <span class="text-[8px] uppercase tracking-widest font-bold opacity-40 group-hover:opacity-100 transition">Encerrar</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="mb-20">
+            <div class="flex items-center gap-4 mb-10">
+                <h3 class="text-[10px] uppercase tracking-[0.5em] text-[#c5a059] font-black italic">Corpo Jurídico e Sócios</h3>
+                <div class="h-[1px] flex-grow bg-white/5"></div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-8" id="team-grid">
+                </div>
+        </div>
+
+        <div class="mb-10">
+            <div class="flex justify-between items-end mb-10">
+                <div>
+                    <h3 class="text-[10px] uppercase tracking-[0.5em] text-[#c5a059] font-black italic mb-2">Agenda Estratégica</h3>
+                    <p class="text-[9px] opacity-30 uppercase tracking-[0.2em]">Competência: Fevereiro 2026</p>
+                </div>
                 <div class="flex gap-4">
-                    <input type="text" id="task-search" placeholder="Buscar processo..." class="bg-white/5 border border-white/10 rounded-full px-6 py-2 text-xs outline-none focus:border-[#c5a059] w-64 transition-all">
-                    <button class="bg-[#c5a059] text-black px-6 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest hover:brightness-110"><i class="fa-solid fa-plus mr-2"></i>Novo</button>
+                    <div class="relative">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-white/20 text-xs"></i>
+                        <input type="text" id="task-filter" placeholder="Buscar Processo ou Dr..." class="bg-white/5 border border-white/10 px-12 py-3 rounded-full text-xs focus:border-[#c5a059] outline-none transition-all w-64">
+                    </div>
+                    <button class="bg-[#c5a059] text-black px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest hover:brightness-110 transition shadow-lg">
+                        <i class="fa-solid fa-plus mr-2"></i>Novo
+                    </button>
                 </div>
             </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8" id="tasks-feed">
+                </div>
+        </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8" id="tasks-feed"></div>
-        </section>
+        <footer class="mt-32 text-center border-t border-white/5 pt-12">
+            <img src="logo.png" class="h-12 mx-auto opacity-10 mb-6 grayscale">
+            <p class="text-[9px] opacity-20 uppercase tracking-[0.8em]">BSC Advogados Associados | Inteligência no Agronegócio © 2026</p>
+        </footer>
     </main>
 
     <script src="Data.js"></script>
     <script src="Engine.js"></script>
     <script src="AdvancedModules.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += Math.random() * 20;
+                if(progress >= 100) {
+                    progress = 100;
+                    clearInterval(progressInterval);
+                    setTimeout(() => {
+                        const loader = document.getElementById('bsc-loader');
+                        loader.style.opacity = '0';
+                        setTimeout(() => {
+                            loader.style.visibility = 'hidden';
+                            document.getElementById('login-module').classList.remove('hidden');
+                        }, 1000);
+                    }, 500);
+                }
+                document.getElementById('loader-progress').style.width = progress + '%';
+            }, 200);
+        });
+    </script>
+
 </body>
 </html>
