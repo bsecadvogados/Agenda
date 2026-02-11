@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BSC Advogados | ERP Strategos Enterprise v20 (Monolith)</title>
+    <title>BSC Advogados | ERP Strategos Active v21</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
@@ -11,7 +11,7 @@
 
     <style>
         /* =========================================
-           BSC DESIGN SYSTEM (EMBEDDED)
+           BSC DESIGN SYSTEM v21.0 (INTERACTIVE)
            ========================================= */
         :root {
             --brand-gold: #c5a059;
@@ -25,7 +25,7 @@
             background-color: var(--bg-light);
             color: var(--brand-dark);
             margin: 0;
-            overflow: hidden; /* App-like feel */
+            overflow: hidden;
         }
 
         /* BACKGROUND */
@@ -36,7 +36,7 @@
             opacity: 0.05; filter: grayscale(100%);
         }
 
-        /* --- TELAS DE ESTADO (LOADER / LOGIN) --- */
+        /* --- LOADER & LOGIN (MANTIDOS) --- */
         .full-screen-overlay {
             position: fixed; inset: 0; z-index: 9999;
             background-color: #ffffff;
@@ -44,18 +44,13 @@
             align-items: center; justify-content: center;
             transition: opacity 0.5s ease, visibility 0.5s;
         }
-
         .hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-
-        /* Loader Animation */
         .loader-logo { width: 180px; margin-bottom: 2rem; animation: pulse 2s infinite; }
         .loader-bar { width: 250px; height: 4px; background: #eee; border-radius: 10px; overflow: hidden; }
         .loader-fill { height: 100%; background: var(--brand-gold); width: 0%; transition: width 0.3s ease; }
         .loader-text { margin-top: 15px; font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
-
         @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.8; transform: scale(0.98); } }
 
-        /* Login Card */
         .auth-card {
             background: white; padding: 40px; width: 100%; max-width: 400px;
             border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
@@ -63,76 +58,85 @@
             transform: translateY(20px); opacity: 0; transition: all 0.5s ease;
         }
         .auth-active .auth-card { transform: translateY(0); opacity: 1; }
-
-        .auth-input {
-            width: 100%; padding: 14px; margin-top: 5px; margin-bottom: 15px;
-            border: 1px solid var(--border-color); border-radius: 12px;
-            font-size: 12px; font-weight: 600; outline: none; background: #f8fafc;
-        }
-        .auth-input:focus { border-color: var(--brand-gold); background: white; }
-
-        .btn-gold {
-            width: 100%; padding: 14px; background: var(--brand-gold); color: white;
-            font-weight: 800; text-transform: uppercase; font-size: 11px; letter-spacing: 2px;
-            border-radius: 12px; border: none; cursor: pointer; transition: 0.3s;
-        }
+        .auth-input { width: 100%; padding: 14px; margin-top: 5px; margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 12px; font-size: 12px; font-weight: 600; outline: none; background: #f8fafc; }
+        .btn-gold { width: 100%; padding: 14px; background: var(--brand-gold); color: white; font-weight: 800; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; border-radius: 12px; border: none; cursor: pointer; transition: 0.3s; }
         .btn-gold:hover { background: #b08d4a; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(197, 160, 89, 0.3); }
 
-        /* --- DASHBOARD UI --- */
+        /* --- DASHBOARD --- */
         #dashboard-ui {
             display: grid; grid-template-columns: 320px 1fr; height: 100vh; width: 100vw;
             opacity: 0; transition: opacity 1s ease;
         }
         .dashboard-visible { opacity: 1 !important; }
 
-        /* Sidebar */
-        .sidebar {
-            background: rgba(255,255,255,0.96); border-right: 1px solid var(--border-color);
-            display: flex; flex-direction: column; padding: 30px; backdrop-filter: blur(10px);
-        }
-        
+        .sidebar { background: rgba(255,255,255,0.96); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 30px; backdrop-filter: blur(10px); }
         .nav-section { margin-bottom: 30px; }
         .nav-section h3 { font-size: 10px; font-weight: 800; color: #cbd5e1; text-transform: uppercase; margin-bottom: 15px; border-left: 3px solid var(--brand-gold); padding-left: 10px; }
         
-        .team-item { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 10px; cursor: pointer; transition: 0.2s; }
-        .team-item:hover { background: #f1f5f9; }
-        .team-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border-color); }
+        /* Draggable Team Item */
+        .team-item { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 10px; cursor: grab; transition: 0.2s; border: 1px solid transparent; }
+        .team-item:active { cursor: grabbing; }
+        .team-item:hover { background: #f1f5f9; border-color: var(--border-color); transform: translateX(5px); }
+        .team-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border-color); pointer-events: none; }
+        .team-info { pointer-events: none; } 
         .team-name { font-size: 11px; font-weight: 700; color: #334155; text-transform: uppercase; }
         .team-role { font-size: 8px; font-weight: 700; color: var(--brand-gold); text-transform: uppercase; }
 
-        /* Main Workspace */
         .workspace { padding: 40px 60px; overflow-y: auto; }
-        
-        /* Header */
         .top-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; }
         .page-title { font-family: 'Playfair Display', serif; font-size: 42px; font-weight: 700; font-style: italic; color: #1e293b; }
         .highlight { color: var(--brand-gold); font-family: 'Montserrat', sans-serif; font-style: normal; }
-        
-        /* Calendar Grid */
+
         .week-header { display: grid; grid-template-columns: repeat(7, 1fr); gap: 15px; margin-bottom: 15px; }
         .week-col { text-align: center; font-size: 10px; font-weight: 800; color: var(--brand-gold); text-transform: uppercase; padding-bottom: 10px; border-bottom: 2px solid var(--border-color); }
-
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 15px; padding-bottom: 100px; min-width: 1200px; }
         
-        .day-cell {
-            background: white; border: 1px solid var(--border-color); border-radius: 16px;
-            min-height: 240px; padding: 15px; position: relative; transition: 0.3s;
-        }
+        .day-cell { background: white; border: 1px solid var(--border-color); border-radius: 16px; min-height: 240px; padding: 15px; position: relative; transition: 0.3s; }
         .day-cell:hover { transform: translateY(-5px); border-color: #cbd5e1; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1); z-index: 10; }
-        
         .day-number { position: absolute; top: 15px; right: 15px; font-family: 'Playfair Display', serif; font-size: 24px; color: #f1f5f9; font-weight: 700; }
 
-        /* Tasks */
+        /* Task Cards Interactivos */
         .task-card {
             background: #f8fafc; border-left: 3px solid var(--brand-gold);
             padding: 10px 12px; border-radius: 8px; margin-bottom: 8px;
-            cursor: pointer; transition: 0.2s; position: relative; z-index: 5;
+            cursor: pointer; transition: all 0.2s; position: relative; z-index: 5;
             border: 1px solid transparent;
         }
         .task-card:hover { background: white; border-color: var(--border-color); box-shadow: 0 4px 6px -2px rgba(0,0,0,0.05); transform: scale(1.02); }
+        /* Efeito quando arrasta um usuário por cima */
+        .task-card.drag-over { border: 2px dashed var(--brand-gold); background: #fffbeb; transform: scale(1.05); }
+
         .task-time { font-size: 9px; font-weight: 800; color: var(--brand-gold); display: block; margin-bottom: 3px; }
         .task-title { font-size: 10px; font-weight: 600; color: #334155; line-height: 1.3; }
-        .task-owner { font-size: 8px; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-top: 5px; display: block; }
+        .task-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+        .task-owner { font-size: 8px; font-weight: 700; color: #94a3b8; text-transform: uppercase; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; }
+        .status-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+
+        /* --- MODAL DE DETALHES --- */
+        #task-modal-overlay {
+            position: fixed; inset: 0; z-index: 99999;
+            background: rgba(0,0,0,0.5); backdrop-filter: blur(5px);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: 0.3s;
+        }
+        #task-modal-overlay.active { opacity: 1; pointer-events: all; }
+        
+        .modal-card {
+            background: white; width: 500px; padding: 30px; border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            transform: scale(0.9); transition: 0.3s;
+        }
+        #task-modal-overlay.active .modal-card { transform: scale(1); }
+
+        .modal-label { font-size: 10px; font-weight: 800; text-transform: uppercase; color: #94a3b8; margin-bottom: 5px; display: block; }
+        .modal-input { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 12px; margin-bottom: 15px; outline: none; }
+        .modal-textarea { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 12px; margin-bottom: 15px; height: 100px; resize: none; outline: none; }
+        
+        /* Cores de Status */
+        .st-pendente { background-color: #cbd5e1; }
+        .st-iniciado { background-color: #3b82f6; }
+        .st-concluido { background-color: #10b981; }
+        .st-urgente { background-color: #ef4444; }
 
         /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
@@ -143,11 +147,47 @@
 
     <div class="app-bg"></div>
 
+    <div id="task-modal-overlay">
+        <div class="modal-card">
+            <div class="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
+                <h3 class="text-lg font-bold text-gray-800">Detalhes do Processo</h3>
+                <button onclick="App.closeModal()" class="text-gray-400 hover:text-red-500"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <input type="hidden" id="modal-task-id">
+
+            <label class="modal-label">Título da Tarefa</label>
+            <input type="text" id="modal-title" class="modal-input bg-gray-50" readonly>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="modal-label">Responsável Atual</label>
+                    <input type="text" id="modal-owner" class="modal-input bg-gray-50" readonly>
+                </div>
+                <div>
+                    <label class="modal-label">Status</label>
+                    <select id="modal-status" class="modal-input cursor-pointer hover:border-[#c5a059]">
+                        <option value="pendente">Pendente</option>
+                        <option value="iniciado">Em Andamento</option>
+                        <option value="concluido">Concluído</option>
+                        <option value="urgente">Urgente</option>
+                    </select>
+                </div>
+            </div>
+
+            <label class="modal-label">Andamento / Observações</label>
+            <textarea id="modal-notes" class="modal-textarea" placeholder="Escreva aqui o andamento do processo..."></textarea>
+
+            <div class="flex justify-end gap-3 mt-4">
+                <button onclick="App.closeModal()" class="px-4 py-2 text-xs font-bold text-gray-500 hover:bg-gray-100 rounded-lg">Cancelar</button>
+                <button onclick="App.saveTask()" class="px-6 py-2 bg-[#c5a059] text-white text-xs font-bold rounded-lg hover:bg-[#b08d4a] shadow-lg">Salvar Alterações</button>
+            </div>
+        </div>
+    </div>
+
     <div id="loader-screen" class="full-screen-overlay">
         <img src="logo.png" alt="BSC" class="loader-logo">
-        <div class="loader-bar">
-            <div id="loader-progress" class="loader-fill"></div>
-        </div>
+        <div class="loader-bar"><div id="loader-progress" class="loader-fill"></div></div>
         <p id="loader-status" class="loader-text">Inicializando...</p>
     </div>
 
@@ -155,15 +195,11 @@
         <div class="auth-card">
             <img src="logo.png" width="160" class="mx-auto mb-6">
             <p class="text-[10px] text-gray-400 font-bold uppercase tracking-[2px] mb-8">Acesso Corporativo</p>
-            
             <div class="text-left">
                 <label class="text-[10px] font-bold text-gray-500 uppercase ml-1">Usuário</label>
-                <select id="login-user" class="auth-input cursor-pointer">
-                    </select>
-
+                <select id="login-user" class="auth-input cursor-pointer"></select>
                 <label class="text-[10px] font-bold text-gray-500 uppercase ml-1">Senha</label>
                 <input type="password" id="login-pass" class="auth-input" placeholder="••••••••">
-
                 <button onclick="App.login()" class="btn-gold mt-4">Entrar no Sistema</button>
             </div>
         </div>
@@ -172,7 +208,6 @@
     <div id="dashboard-ui">
         <aside class="sidebar">
             <img src="logo.png" width="140" class="mx-auto mb-10 cursor-pointer hover:opacity-80 transition">
-            
             <div class="flex-grow overflow-y-auto pr-2">
                 <div class="nav-section">
                     <h3>Sócios</h3>
@@ -183,7 +218,6 @@
                     <div id="sidebar-staff"></div>
                 </div>
             </div>
-
             <div class="mt-auto pt-6 border-t border-gray-200 flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg" onclick="location.reload()">
                 <img id="user-avatar" src="" class="w-10 h-10 rounded-full object-cover border border-gray-300">
                 <div>
@@ -200,7 +234,7 @@
                     <h1 class="page-title">Fevereiro <span class="highlight">2026</span></h1>
                     <div class="flex gap-2 mt-2">
                         <span class="px-2 py-1 bg-white border border-gray-200 rounded text-[8px] font-bold text-gray-500 uppercase">Palmas - TO</span>
-                        <span class="px-2 py-1 bg-white border border-gray-200 rounded text-[8px] font-bold text-gray-500 uppercase">Gestão Estratégica</span>
+                        <span class="px-2 py-1 bg-white border border-gray-200 rounded text-[8px] font-bold text-gray-500 uppercase">Arraste para delegar</span>
                     </div>
                 </div>
                 <div class="text-right">
@@ -210,19 +244,17 @@
             </header>
 
             <div class="week-header">
-                <div class="week-col">Domingo</div><div class="week-col">Segunda</div><div class="week-col">Terça</div>
-                <div class="week-col">Quarta</div><div class="week-col">Quinta</div><div class="week-col">Sexta</div><div class="week-col">Sábado</div>
+                <div class="week-col">Dom</div><div class="week-col">Seg</div><div class="week-col">Ter</div>
+                <div class="week-col">Qua</div><div class="week-col">Qui</div><div class="week-col">Sex</div><div class="week-col">Sáb</div>
             </div>
 
-            <div id="calendar-grid" class="calendar-grid">
-                </div>
+            <div id="calendar-grid" class="calendar-grid"></div>
         </main>
     </div>
 
     <script>
         /**
-         * BSC ADVOGADOS - CORE SYSTEM (MONOLITH)
-         * Evita erros de carregamento externo.
+         * BSC ADVOGADOS - CORE SYSTEM v21.0 (Interactive)
          */
 
         // 1. DADOS (DATA CORE)
@@ -241,32 +273,40 @@
                 admin: { id: "BSC_GERAL", name: "Administração", role: "Master", avatar: "logo.png" }
             },
             tasks: [
-                { day: 2, owner: "GE", time: "09:15", title: "Audiência Conciliação - Rafael Zanini x Antonio Mendes", status: "pendente" },
-                { day: 2, owner: "AF", time: "16:30", title: "Impugnar Sentença - TAUILE x SANNA", status: "urgente" },
-                { day: 3, owner: "FS", time: "14:00", title: "Reunião - Souzamaas", status: "iniciado" },
-                { day: 3, owner: "GE", time: "15:30", title: "Defesa Prévia - BRAGA BORGES", status: "pendente" },
-                { day: 4, owner: "IM", time: "07:00", title: "Reunião BNI Jalapão", status: "concluido" },
-                { day: 4, owner: "IM", time: "09:30", title: "Emissão Boletos - JK BUSINESS", status: "pendente" },
-                { day: 4, owner: "IM", time: "Dia Inteiro", title: "Viagem LUÍS EDUARDO MAGALHÃES", status: "iniciado" },
-                { day: 4, owner: "AF", time: "08:30", title: "Redistribuir Proc. - ZANINI x ALESSANDRO", status: "pendente" },
-                { day: 5, owner: "GB", time: "08:00", title: "Reunião RAFAEL ZANINI - LEM", status: "pendente" },
-                { day: 5, owner: "IM", time: "11:00", title: "BNI - Módulo Treinamento", status: "concluido" },
-                { day: 6, owner: "IM", time: "Dia Inteiro", title: "Inauguração Escritório AUBE", status: "pendente" },
-                { day: 6, owner: "FS", time: "08:30", title: "Informar Endereço - ZANINI", status: "pendente" },
-                { day: 7, owner: "IM", time: "Dia Inteiro", title: "Dia de Campo - OILEMA", status: "concluido" },
-                { day: 10, owner: "FS", time: "08:30", title: "Dados Bancários - JESSICA YUMIKO", status: "iniciado" },
-                { day: 10, owner: "GE", time: "11:30", title: "Juntar Custas - ZANINI", status: "pendente" },
-                { day: 13, owner: "GE", time: "09:30", title: "Impugnar Cálculo - TAUILE x SANNA", status: "urgente" },
-                { day: 24, owner: "GE", time: "Dia Inteiro", title: "Julgamento Recurso - Motz x NB", status: "pendente" }
+                { id: 1, day: 2, owner: "GE", time: "09:15", title: "Audiência Conciliação - Rafael Zanini", status: "pendente", notes: "" },
+                { id: 2, day: 2, owner: "AF", time: "16:30", title: "Impugnar Sentença - TAUILE x SANNA", status: "urgente", notes: "" },
+                { id: 3, day: 3, owner: "FS", time: "14:00", title: "Reunião - Souzamaas", status: "iniciado", notes: "" },
+                { id: 4, day: 3, owner: "GE", time: "15:30", title: "Defesa Prévia - BRAGA BORGES", status: "pendente", notes: "" },
+                { id: 5, day: 4, owner: "IM", time: "07:00", title: "Reunião BNI Jalapão", status: "concluido", notes: "" },
+                { id: 6, day: 4, owner: "IM", time: "09:30", title: "Emissão Boletos - JK BUSINESS", status: "pendente", notes: "" },
+                { id: 7, day: 4, owner: "IM", time: "Dia Inteiro", title: "Viagem LUÍS EDUARDO MAGALHÃES", status: "iniciado", notes: "" },
+                { id: 8, day: 4, owner: "AF", time: "08:30", title: "Redistribuir Proc. - ZANINI x ALESSANDRO", status: "pendente", notes: "" },
+                { id: 9, day: 5, owner: "GB", time: "08:00", title: "Reunião RAFAEL ZANINI - LEM", status: "pendente", notes: "" },
+                { id: 10, day: 5, owner: "IM", time: "11:00", title: "BNI - Módulo Treinamento", status: "concluido", notes: "" },
+                { id: 11, day: 6, owner: "IM", time: "Dia Inteiro", title: "Inauguração Escritório AUBE", status: "pendente", notes: "" },
+                { id: 12, day: 6, owner: "FS", time: "08:30", title: "Informar Endereço - ZANINI", status: "pendente", notes: "" },
+                { id: 13, day: 7, owner: "IM", time: "Dia Inteiro", title: "Dia de Campo - OILEMA", status: "concluido", notes: "" },
+                { id: 14, day: 10, owner: "FS", time: "08:30", title: "Dados Bancários - JESSICA YUMIKO", status: "iniciado", notes: "" },
+                { id: 15, day: 10, owner: "GE", time: "11:30", title: "Juntar Custas - ZANINI", status: "pendente", notes: "" },
+                { id: 16, day: 13, owner: "GE", time: "09:30", title: "Impugnar Cálculo - TAUILE x SANNA", status: "urgente", notes: "" },
+                { id: 17, day: 24, owner: "GE", time: "Dia Inteiro", title: "Julgamento Recurso - Motz x NB", status: "pendente", notes: "" }
             ],
             getAllUsers: function() { return [...this.team.partners, ...this.team.staff, this.team.admin]; },
             getUserById: function(id) { return this.getAllUsers().find(u => u.id === id); },
-            getTasks: function(day) { return this.tasks.filter(t => t.day === day); }
+            updateTask: function(taskId, newData) {
+                const idx = this.tasks.findIndex(t => t.id == taskId);
+                if(idx !== -1) {
+                    this.tasks[idx] = { ...this.tasks[idx], ...newData };
+                    return true;
+                }
+                return false;
+            }
         };
 
         // 2. APLICAÇÃO (ENGINE)
         const App = {
-            dom: {}, // Cache
+            dom: {},
+            currentUser: null,
 
             init: function() {
                 console.log("Sistema Iniciando...");
@@ -291,31 +331,31 @@
                     profileRole: document.getElementById('user-role'),
                     profileImg: document.getElementById('user-avatar'),
                     clockTime: document.getElementById('clock-time'),
-                    clockDate: document.getElementById('clock-date')
+                    clockDate: document.getElementById('clock-date'),
+                    // Modal
+                    modalOverlay: document.getElementById('task-modal-overlay'),
+                    mTaskId: document.getElementById('modal-task-id'),
+                    mTitle: document.getElementById('modal-title'),
+                    mOwner: document.getElementById('modal-owner'),
+                    mStatus: document.getElementById('modal-status'),
+                    mNotes: document.getElementById('modal-notes')
                 };
             },
 
             runLoader: function() {
                 let width = 0;
                 const timer = setInterval(() => {
-                    width += 2; // Rapidez
+                    width += 2;
                     this.dom.bar.style.width = width + '%';
-                    
                     if(width > 30) this.dom.status.innerText = "Carregando módulos jurídicos...";
                     if(width > 70) this.dom.status.innerText = "Sincronizando agenda...";
-
-                    if(width >= 100) {
-                        clearInterval(timer);
-                        this.showLogin();
-                    }
+                    if(width >= 100) { clearInterval(timer); this.showLogin(); }
                 }, 30);
             },
 
             populateLogin: function() {
                 const users = DataBase.getAllUsers();
-                this.dom.userSelect.innerHTML = users.map(u => 
-                    `<option value="${u.id}">${u.name} - ${u.role}</option>`
-                ).join('');
+                this.dom.userSelect.innerHTML = users.map(u => `<option value="${u.id}">${u.name} - ${u.role}</option>`).join('');
             },
 
             showLogin: function() {
@@ -328,8 +368,8 @@
                 const id = this.dom.userSelect.value;
                 const pass = this.dom.userPass.value;
                 const user = DataBase.getUserById(id);
-
                 if(pass === "123" || id === "BSC_GERAL") {
+                    this.currentUser = user;
                     this.dom.login.classList.add('hidden');
                     this.dom.dashboard.classList.add('dashboard-visible');
                     this.setupDashboard(user);
@@ -339,27 +379,22 @@
             },
 
             setupDashboard: function(user) {
-                // Perfil
                 this.dom.profileName.innerText = user.name;
                 this.dom.profileRole.innerText = user.role;
                 this.dom.profileImg.src = user.avatar;
-
-                // Sidebar
+                
                 this.dom.partnersList.innerHTML = DataBase.team.partners.map(u => this.createSidebarItem(u)).join('');
                 this.dom.staffList.innerHTML = DataBase.team.staff.map(u => this.createSidebarItem(u)).join('');
-
-                // Calendário
-                this.renderCalendar(user.id);
-
-                // Relógio
+                
+                this.renderCalendar();
                 this.startClock();
             },
 
             createSidebarItem: function(u) {
                 return `
-                    <div class="team-item">
+                    <div class="team-item" draggable="true" ondragstart="App.drag(event, '${u.id}')">
                         <img src="${u.avatar}" class="team-avatar">
-                        <div>
+                        <div class="team-info">
                             <p class="team-name">${u.name}</p>
                             <p class="team-role">${u.dept}</p>
                         </div>
@@ -367,20 +402,31 @@
                 `;
             },
 
-            renderCalendar: function(userId) {
+            renderCalendar: function() {
                 this.dom.grid.innerHTML = '';
                 for(let i=1; i<=28; i++) {
-                    const tasks = DataBase.getTasks(i);
+                    const tasks = DataBase.tasks.filter(t => t.day === i);
                     let tasksHtml = tasks.map(t => {
-                        let color = '#c5a059'; // Padrão
-                        if(t.status === 'urgente') color = '#ef4444';
-                        if(t.status === 'concluido') color = '#10b981';
-                        
+                        let borderColor = '#c5a059';
+                        let statusColor = 'st-pendente';
+                        if(t.status === 'urgente') { borderColor = '#ef4444'; statusColor = 'st-urgente'; }
+                        if(t.status === 'concluido') { borderColor = '#10b981'; statusColor = 'st-concluido'; }
+                        if(t.status === 'iniciado') { borderColor = '#3b82f6'; statusColor = 'st-iniciado'; }
+
                         return `
-                            <div class="task-card" style="border-left-color: ${color}">
-                                <span class="task-time" style="color: ${color}">${t.time}</span>
+                            <div class="task-card" style="border-left-color: ${borderColor}" 
+                                 onclick="App.openModal(${t.id})"
+                                 ondragover="App.allowDrop(event)"
+                                 ondrop="App.drop(event, ${t.id})">
+                                <div class="flex justify-between mb-1">
+                                    <span class="task-time" style="color:${borderColor}">${t.time}</span>
+                                    <div class="status-dot ${statusColor}"></div>
+                                </div>
                                 <p class="task-title">${t.title}</p>
-                                <span class="task-owner">${t.owner}</span>
+                                <div class="task-footer">
+                                    <span class="task-owner">${t.owner}</span>
+                                    ${t.notes ? '<i class="fa-solid fa-note-sticky text-gray-400 text-[10px]"></i>' : ''}
+                                </div>
                             </div>
                         `;
                     }).join('');
@@ -392,6 +438,54 @@
                 }
             },
 
+            // DRAG AND DROP
+            drag: function(ev, userId) {
+                ev.dataTransfer.setData("userId", userId);
+            },
+            allowDrop: function(ev) {
+                ev.preventDefault();
+                ev.currentTarget.classList.add('drag-over');
+            },
+            drop: function(ev, taskId) {
+                ev.preventDefault();
+                ev.currentTarget.classList.remove('drag-over');
+                const userId = ev.dataTransfer.getData("userId");
+                const user = DataBase.getUserById(userId);
+                
+                if(user) {
+                    if(confirm(`Transferir responsabilidade desta tarefa para ${user.name}?`)) {
+                        DataBase.updateTask(taskId, { owner: userId });
+                        this.renderCalendar();
+                    }
+                }
+            },
+
+            // MODAL LOGIC
+            openModal: function(taskId) {
+                const task = DataBase.tasks.find(t => t.id === taskId);
+                if(!task) return;
+
+                this.dom.mTaskId.value = task.id;
+                this.dom.mTitle.value = task.title;
+                this.dom.mOwner.value = task.owner;
+                this.dom.mStatus.value = task.status;
+                this.dom.mNotes.value = task.notes || "";
+
+                this.dom.modalOverlay.classList.add('active');
+            },
+            closeModal: function() {
+                this.dom.modalOverlay.classList.remove('active');
+            },
+            saveTask: function() {
+                const id = this.dom.mTaskId.value;
+                const newStatus = this.dom.mStatus.value;
+                const newNotes = this.dom.mNotes.value;
+
+                DataBase.updateTask(id, { status: newStatus, notes: newNotes });
+                this.closeModal();
+                this.renderCalendar();
+            },
+
             startClock: function() {
                 setInterval(() => {
                     const now = new Date();
@@ -401,8 +495,11 @@
             }
         };
 
-        // Inicialização Segura
         window.addEventListener('load', () => App.init());
+        // Listener para fechar modal com click fora
+        document.addEventListener('dragleave', (e) => {
+            if(e.target.classList.contains('task-card')) e.target.classList.remove('drag-over');
+        });
 
     </script>
 </body>
