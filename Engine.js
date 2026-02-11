@@ -1,191 +1,184 @@
 /**
- * BSC ENGINE v16.0 - CORREÇÃO DE INICIALIZAÇÃO
- * Foco: Garantir que o Loader desapareça e o Login apareça.
+ * BSC ENGINE v17.0
+ * Controle de Inicialização e Lógica
  */
 
 const Engine = (() => {
     
-    // Mapeamento de Elementos (Garante que o JS encontre o HTML)
+    // Cache de Elementos (Performance)
     const DOM = {
         loader: document.getElementById('system-loader'),
-        loaderBar: document.getElementById('loader-progress'),
+        loaderBar: document.getElementById('loader-bar'),
         loaderStatus: document.getElementById('loader-status'),
         
-        authModal: document.getElementById('auth-modal'),
-        loginUser: document.getElementById('login-user'),
+        authScreen: document.getElementById('auth-screen'),
+        loginSelect: document.getElementById('login-user'),
         loginPass: document.getElementById('login-pass'),
         
-        interface: document.getElementById('main-interface'),
+        dashboard: document.getElementById('dashboard-ui'),
         
-        // Containers
-        sidebarPartners: document.getElementById('sidebar-partners'),
-        sidebarStaff: document.getElementById('sidebar-staff'),
-        calendarGrid: document.getElementById('calendar-grid'),
+        listPartners: document.getElementById('list-partners'),
+        listStaff: document.getElementById('list-staff'),
         
-        // Perfil
-        avatar: document.getElementById('session-avatar'),
-        name: document.getElementById('session-name'),
-        role: document.getElementById('session-role'),
+        grid: document.getElementById('calendar-grid'),
         
-        // Tempo
-        clock: document.getElementById('clock'),
-        date: document.getElementById('date')
+        clockTime: document.getElementById('clock-time'),
+        clockDate: document.getElementById('clock-date'),
+        
+        userAvatar: document.getElementById('user-avatar'),
+        userName: document.getElementById('user-name'),
+        userRole: document.getElementById('user-role')
     };
 
-    // 1. SEQUÊNCIA DE BOOT (Correção do Travamento)
+    // 1. BOOT (Inicialização)
     const init = () => {
-        console.log("Sistema Iniciando...");
+        console.log("Engine Started...");
         
-        // Popula o Login
+        // Carrega Usuários no Select
+        populateLoginEmergency();
+
+        // Animação de Load
+        let width = 0;
+        const interval = setInterval(() => {
+            width += 2; // Velocidade do carregamento
+            if(DOM.loaderBar) DOM.loaderBar.style.width = width + '%';
+            
+            if(width > 30) if(DOM.loaderStatus) DOM.loaderStatus.innerText = "Carregando Módulos Jurídicos...";
+            if(width > 70) if(DOM.loaderStatus) DOM.loaderStatus.innerText = "Sincronizando Agenda...";
+            
+            if(width >= 100) {
+                clearInterval(interval);
+                finishLoad(); // CHAMA A FINALIZAÇÃO
+            }
+        }, 30);
+    };
+
+    // Populador de Login (Acessível externamente para emergência)
+    const populateLoginEmergency = () => {
+        if(!DOM.loginSelect) return;
+        DOM.loginSelect.innerHTML = ''; // Limpa antes
         const users = DataCore.getAllUsers();
         users.forEach(u => {
             const opt = document.createElement('option');
             opt.value = u.id;
             opt.innerText = u.name;
-            DOM.loginUser.appendChild(opt);
+            DOM.loginSelect.appendChild(opt);
         });
-
-        // Simula Carregamento (Barra de Progresso)
-        let width = 0;
-        const interval = setInterval(() => {
-            width += 5; // Velocidade do carregamento
-            DOM.loaderBar.style.width = width + '%';
-            
-            if (width > 30) DOM.loaderStatus.innerText = "Carregando Módulos Jurídicos...";
-            if (width > 70) DOM.loaderStatus.innerText = "Sincronizando Agenda...";
-            
-            if (width >= 100) {
-                clearInterval(interval);
-                finishLoading();
-            }
-        }, 50); // 50ms * 20 passos = 1 segundo de load (rápido e dinâmico)
     };
 
-    // 2. TRANSIÇÃO LOADER -> LOGIN (Força Bruta Visual)
-    const finishLoading = () => {
-        // Passo 1: Fade Out Loader
-        DOM.loader.style.opacity = '0';
+    // 2. TRANSIÇÃO LOADER -> AUTH
+    const finishLoad = () => {
+        if(DOM.loader) DOM.loader.style.opacity = '0';
         
         setTimeout(() => {
-            // Passo 2: Remove Loader, Mostra Login
-            DOM.loader.style.display = 'none'; // Importante: remove do fluxo
-            DOM.authModal.style.display = 'flex'; // Importante: ativa o flexbox
-            
-            // Passo 3: Fade In Login
-            setTimeout(() => {
-                DOM.authModal.style.opacity = '1';
-            }, 50);
-        }, 800);
+            if(DOM.loader) DOM.loader.style.display = 'none';
+            if(DOM.authScreen) {
+                DOM.authScreen.style.display = 'flex'; // Torna visível
+                setTimeout(() => DOM.authScreen.style.opacity = '1', 50); // Fade In
+            }
+        }, 500);
     };
 
     // 3. LOGIN LÓGICO
     const attemptLogin = () => {
-        const userId = DOM.loginUser.value;
+        const id = DOM.loginSelect.value;
         const pass = DOM.loginPass.value;
-        const user = DataCore.getUserById(userId);
-
+        
         // Senha padrão 123 ou ADMIN
-        if (user && (pass === "123" || userId === "BSC_GERAL")) {
-            startSession(user);
+        if(pass === "123" || id === "BSC_GERAL") {
+            const user = DataCore.getUserById(id);
+            enterDashboard(user);
         } else {
-            alert("Senha Incorreta. Tente '123'.");
+            alert("Senha Incorreta (Padrão: 123)");
         }
     };
 
-    // 4. INÍCIO DA SESSÃO (LOGIN -> DASHBOARD)
-    const startSession = (user) => {
-        // Fade Out Login
-        DOM.authModal.style.opacity = '0';
-        
+    // 4. DASHBOARD
+    const enterDashboard = (user) => {
+        DOM.authScreen.style.opacity = '0';
         setTimeout(() => {
-            DOM.authModal.style.display = 'none';
-            DOM.interface.style.display = 'grid'; // Ativa o Grid do Dashboard
+            DOM.authScreen.style.display = 'none';
+            DOM.dashboard.style.display = 'grid';
+            setTimeout(() => DOM.dashboard.style.opacity = '1', 50);
             
-            // Popula Dados
-            DOM.name.innerText = user.name;
-            DOM.role.innerText = user.role;
-            DOM.avatar.src = user.avatar;
-            
-            renderSidebar();
+            // Setup User
+            DOM.userName.innerText = user.name;
+            DOM.userRole.innerText = user.role;
+            DOM.userAvatar.src = user.avatar;
+
+            // Render
+            renderTeam();
             renderCalendar(user.id);
             startClock();
-
-            // Fade In Dashboard
-            setTimeout(() => {
-                DOM.interface.style.opacity = '1';
-            }, 50);
         }, 500);
     };
 
-    // 5. RENDERIZADORES
-    const renderSidebar = () => {
+    // Renderizadores
+    const renderTeam = () => {
         const team = DataCore.getTeam();
         
-        DOM.sidebarPartners.innerHTML = '';
+        DOM.listPartners.innerHTML = '';
         team.partners.forEach(p => {
-            DOM.sidebarPartners.innerHTML += createSidebarItem(p);
+            DOM.listPartners.innerHTML += createUserItem(p);
         });
 
-        DOM.sidebarStaff.innerHTML = '';
+        DOM.listStaff.innerHTML = '';
         team.staff.forEach(s => {
-            DOM.sidebarStaff.innerHTML += createSidebarItem(s);
+            DOM.listStaff.innerHTML += createUserItem(s);
         });
     };
 
-    const createSidebarItem = (u) => `
-        <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition">
-            <img src="${u.avatar}" class="w-8 h-8 rounded-full border border-gray-200 object-cover">
+    const createUserItem = (u) => `
+        <div class="team-item">
+            <img src="${u.avatar}" class="team-avatar">
             <div>
-                <p class="text-[10px] font-bold text-gray-700 uppercase">${u.name}</p>
-                <p class="text-[8px] font-bold text-[#c5a059] uppercase">${u.role}</p>
+                <p class="team-name">${u.name}</p>
+                <p class="team-role">${u.role}</p>
             </div>
         </div>
     `;
 
     const renderCalendar = (userId) => {
-        DOM.calendarGrid.innerHTML = '';
-        // 28 Dias de Fevereiro
+        DOM.grid.innerHTML = '';
         for(let i=1; i<=28; i++) {
             const cell = document.createElement('div');
-            cell.className = 'calendar-day';
+            cell.className = 'day-cell';
             
-            // Número
-            cell.innerHTML = `<span class="absolute top-4 right-4 text-2xl font-serif font-bold text-gray-100">${i}</span>`;
+            cell.innerHTML = `<span class="day-number">${i}</span>`;
             
-            // Tarefas
             const tasks = DataCore.getTasksByDay(i);
             tasks.forEach(t => {
                 const card = document.createElement('div');
                 card.className = 'task-card';
                 if(t.status === 'urgente') card.style.borderLeftColor = '#ef4444';
-                if(t.status === 'concluido') { card.style.opacity = '0.6'; card.style.borderLeftColor = '#10b981'; }
-
+                if(t.status === 'concluido') { card.style.borderLeftColor = '#10b981'; card.style.opacity = '0.6'; }
+                
                 card.innerHTML = `
-                    <span class="block text-[10px] font-bold text-[#c5a059] mb-1">${t.time}</span>
-                    <p class="text-[10px] font-bold text-gray-700 leading-tight">${t.title}</p>
-                    <span class="block text-[8px] font-bold text-gray-400 uppercase mt-2">${t.owner}</span>
+                    <span class="task-time">${t.time}</span>
+                    <p class="task-title">${t.title}</p>
+                    <span class="task-owner">${t.owner}</span>
                 `;
                 cell.appendChild(card);
             });
-            DOM.calendarGrid.appendChild(cell);
+            DOM.grid.appendChild(cell);
         }
     };
 
     const startClock = () => {
         setInterval(() => {
             const now = new Date();
-            DOM.clock.innerText = now.toLocaleTimeString('pt-BR');
-            const opt = { weekday: 'long', day: 'numeric', month: 'long' };
-            DOM.date.innerText = now.toLocaleDateString('pt-BR', opt);
+            DOM.clockTime.innerText = now.toLocaleTimeString('pt-BR');
+            const opts = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+            DOM.clockDate.innerText = now.toLocaleDateString('pt-BR', opts);
         }, 1000);
     };
 
-    // Retorno Público
     return {
         init: init,
-        attemptLogin: attemptLogin
+        attemptLogin: attemptLogin,
+        populateLoginEmergency: populateLoginEmergency
     };
 })();
 
 // Inicializa quando o HTML estiver pronto
-window.addEventListener('DOMContentLoaded', Engine.init);
+document.addEventListener('DOMContentLoaded', Engine.init);
