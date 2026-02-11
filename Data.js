@@ -1,70 +1,279 @@
 /**
- * BSC ADVOGADOS - ENTERPRISE RESOURCE PLANNING (ERP)
- * DATA MODULE v10.0.0 - "STRATEGOS"
- * Arquitetura de Camada Única de Dados (Single Source of Truth)
+ * BSC ADVOGADOS - DATA CORE SYSTEM
+ * Versão: 12.5.0 (Enterprise)
+ * Responsável: Iago Manguary (Controller)
+ * * Este módulo atua como a "Single Source of Truth" (Fonte Única da Verdade)
+ * para toda a aplicação. Nenhuma outra parte do código deve conter dados hardcoded.
  */
 
-class BSCDataEngine {
+class BSCRepository {
     constructor() {
-        this.version = "10.0.0";
-        this.lastSync = new Date().toISOString();
+        this.appName = "Strategos ERP";
         
-        // MAPEAMENTO HIERÁRQUICO INSTITUCIONAL
-        this.organization = {
-            socios: {
-                "AF": { id: "AF", full_name: "Abimael Francisco", role: "Sócio Proprietário", avatar: "abimael.jpg", color: "#c5a059" },
-                "PS": { id: "PS", full_name: "Pamella Sakumoto", role: "Sócia Proprietária", avatar: "pamella.jpg", color: "#c5a059" },
-                "GB": { id: "GB", full_name: "Giovani Barcellos", role: "Sócio Proprietário", avatar: "giovani.jpg", color: "#c5a059" }
+        // ==========================================
+        // 1. MAPEAMENTO DE PESSOAL (HIERARQUIA)
+        // ==========================================
+        this.personnel = {
+            // Sócios (Nível 1)
+            AF: {
+                id: "AF",
+                name: "Abimael Francisco",
+                role: "Sócio Proprietário",
+                email: "abimael@bscadvogados.com.br",
+                avatar: "abimael.jpg",
+                type: "partner",
+                initials: "AF"
             },
-            controladoria: {
-                "IM": { id: "IM", full_name: "Iago Manguary", role: "Assessor & Controller Jurídico", avatar: "iago.jpg", color: "#ffffff" }
+            PS: {
+                id: "PS",
+                name: "Pamella Sakumoto",
+                role: "Sócia Proprietária",
+                email: "pamella@bscadvogados.com.br",
+                avatar: "pamella.jpg",
+                type: "partner",
+                initials: "PS"
             },
-            juridico: {
-                "GE": { id: "GE", full_name: "Geovana Alexassandra", role: "Advogada Especialista", avatar: "geovana.jpg", color: "#9ca3af" },
-                "FS": { id: "FS", full_name: "Felipe dos Santos", role: "Advogado Associado", avatar: "felipe.jpg", color: "#9ca3af" }
+            GB: {
+                id: "GB",
+                name: "Giovani Barcellos",
+                role: "Sócio Proprietário",
+                email: "giovani@bscadvogados.com.br",
+                avatar: "giovani.jpg",
+                type: "partner",
+                initials: "GB"
+            },
+            
+            // Gestão (Nível 2)
+            IM: {
+                id: "IM",
+                name: "Iago Manguary",
+                role: "Controller & Assessor Jurídico",
+                email: "iago@bscadvogados.com.br",
+                avatar: "iago.jpg",
+                type: "staff",
+                initials: "IM"
+            },
+
+            // Jurídico (Nível 3)
+            GE: {
+                id: "GE",
+                name: "Geovana Alexassandra",
+                role: "Advogada",
+                email: "geovana@bscadvogados.com.br",
+                avatar: "geovana.jpg",
+                type: "staff",
+                initials: "GE"
+            },
+            FS: {
+                id: "FS",
+                name: "Felipe dos Santos",
+                role: "Advogado",
+                email: "felipe@bscadvogados.com.br",
+                avatar: "felipe.jpg",
+                type: "staff",
+                initials: "FS"
+            },
+            
+            // Usuário Mestre
+            ADMIN: {
+                id: "ADMIN",
+                name: "BSC ADMINISTRAÇÃO",
+                role: "Acesso Mestre",
+                email: "admin@bsc.com",
+                avatar: "logo.png",
+                type: "system",
+                initials: "BSC"
             }
         };
 
-        // REGISTRO DE TAREFAS (Injeção Real do Calendário Fev/2026)
-        this.masterRegistry = [
-            { id: 2026001, day: 2, owner: "GE", time: "09:15", title: "Audiência Conciliação - Rafael Zanini x Antonio Mendes", status: "pendente", category: "Judicial" },
-            { id: 2026002, day: 2, owner: "AF", time: "16:30", title: "Impugnar Cumprimento de Sentença - TAUILE x SANNA", status: "urgente", category: "Prazo" },
-            { id: 2026003, day: 3, owner: "FS", time: "14:00", title: "Reunião - Souzamaas", status: "iniciado", category: "Reunião" },
-            { id: 2026004, day: 3, owner: "GE", time: "15:30", title: "Defesa Prévia - TRANSPORTE BRAGA BORGES", status: "pendente", category: "Defesa" },
-            { id: 2026005, day: 4, owner: "IM", time: "07:00", title: "Reunião BNI Jalapão", status: "concluido", category: "Networking" },
-            { id: 2026006, day: 4, owner: "IM", time: "09:30", title: "JK BUSINESS - Emissão de Boletos", status: "pendente", category: "Financeiro" },
-            { id: 2026007, day: 4, owner: "IM", time: "Dia Inteiro", title: "Viagem LUÍS EDUARDO MAGALHÃES", status: "iniciado", category: "Institucional" },
-            { id: 2026008, day: 4, owner: "AF", time: "08:30", title: "Redistribuir Processo - ZANINIZANINI x ALESSANDRO", status: "pendente", category: "Gestão" },
-            { id: 2026009, day: 5, owner: "GB", time: "08:00", title: "Reunião RAFAEL ZANINI - LEM", status: "pendente", category: "Cliente" },
-            { id: 2026010, day: 5, owner: "IM", time: "11:00", title: "BNI - Módulo de Treinamento", status: "concluido", category: "Networking" },
-            { id: 2026011, day: 7, owner: "IM", time: "Dia Inteiro", title: "Dia de Campo - OILEMA", status: "concluido", category: "Agro" },
-            { id: 2026012, day: 10, owner: "FS", time: "08:30", title: "Informar Dados Bancários - JESSICA YUMIKO", status: "iniciado", category: "Judicial" },
-            { id: 2026013, day: 13, owner: "GE", time: "09:30", title: "Impugnar Cálculo - TAUILE x SANNA", status: "urgente", category: "Financeiro" },
-            { id: 2026014, day: 24, owner: "GE", time: "Dia Inteiro", title: "Julgamento Recurso Inominado - Motz x NB", status: "pendente", category: "Pauta" }
+        // ==========================================
+        // 2. AGENDA DE FEVEREIRO 2026 (REAL DATA)
+        // ==========================================
+        // Mapeamento exato da imagem fornecida
+        this.calendarData = [
+            // SEGUNDA-FEIRA, DIA 02
+            { 
+                id: 101, 
+                day: 2, 
+                time: "09:15", 
+                title: "Audiência Conciliação - Rafael Zanini x Antonio Mendes", 
+                owner: "GE", 
+                status: "pendente",
+                priority: "high"
+            },
+            { 
+                id: 102, 
+                day: 2, 
+                time: "16:30", 
+                title: "Impugnar Cumprimento de Sentença - TAUILE x SANNA", 
+                owner: "AF", 
+                status: "urgente",
+                priority: "critical"
+            },
+
+            // TERÇA-FEIRA, DIA 03
+            { 
+                id: 103, 
+                day: 3, 
+                time: "14:00", 
+                title: "Reunião - Souzamaas", 
+                owner: "FS", 
+                status: "iniciado",
+                priority: "medium"
+            },
+            { 
+                id: 104, 
+                day: 3, 
+                time: "15:30", 
+                title: "Realização de Defesa Prévia - TRANSPORTE BRAGA BORGES", 
+                owner: "GE", 
+                status: "pendente",
+                priority: "high"
+            },
+
+            // QUARTA-FEIRA, DIA 04
+            { 
+                id: 105, 
+                day: 4, 
+                time: "Dia Inteiro", 
+                title: "Viagem à LUÍS EDUARDO MAGALHÃES", 
+                owner: "IM", 
+                status: "iniciado",
+                priority: "critical"
+            },
+            { 
+                id: 106, 
+                day: 4, 
+                time: "07:00", 
+                title: "Reunião BNI Jalapão", 
+                owner: "IM", 
+                status: "concluido",
+                priority: "medium"
+            },
+            { 
+                id: 107, 
+                day: 4, 
+                time: "08:30", 
+                title: "Redistribuir Processo - ZANINIZANINI x ALESSANDRO", 
+                owner: "AF", 
+                status: "pendente",
+                priority: "medium"
+            },
+            { 
+                id: 108, 
+                day: 4, 
+                time: "09:30", 
+                title: "Atualização Cadastral e Boletos - JK BUSINESS", 
+                owner: "IM", 
+                status: "pendente",
+                priority: "medium"
+            },
+
+            // QUINTA-FEIRA, DIA 05
+            { 
+                id: 109, 
+                day: 5, 
+                time: "08:00", 
+                title: "Reunião RAFAEL ZANINI - LEM", 
+                owner: "GB", 
+                status: "pendente",
+                priority: "high"
+            },
+            { 
+                id: 110, 
+                day: 5, 
+                time: "11:00", 
+                title: "Módulo - BNI Jalapão", 
+                owner: "IM", 
+                status: "concluido",
+                priority: "low"
+            },
+
+            // SEXTA-FEIRA, DIA 06
+            { 
+                id: 111, 
+                day: 6, 
+                time: "Dia Inteiro", 
+                title: "Inauguração - Escritório AUBE", 
+                owner: "IM", 
+                status: "pendente",
+                priority: "medium"
+            },
+
+            // SÁBADO, DIA 07
+            { 
+                id: 112, 
+                day: 7, 
+                time: "Dia Inteiro", 
+                title: "Dia de Campo - OILEMA", 
+                owner: "IM", 
+                status: "concluido",
+                priority: "critical"
+            },
+
+            // SEMANA 2 - TERÇA DIA 10
+            { 
+                id: 201, 
+                day: 10, 
+                time: "08:30", 
+                title: "Informar dados bancários - JESSICA YUMIKO", 
+                owner: "FS", 
+                status: "iniciado",
+                priority: "low"
+            },
+            
+            // SEMANA 2 - SEXTA DIA 13
+             { 
+                id: 202, 
+                day: 13, 
+                time: "09:30", 
+                title: "Impugnar Cálculo - TAUILE x SANNA", 
+                owner: "GE", 
+                status: "urgente",
+                priority: "critical"
+            },
+
+            // SEMANA 4 - TERÇA DIA 24
+            { 
+                id: 401, 
+                day: 24, 
+                time: "Dia Inteiro", 
+                title: "Julgamento RECURSO INOMINADO - Motz x NB", 
+                owner: "GE", 
+                status: "pendente",
+                priority: "critical"
+            }
         ];
-
-        this.logs = [];
     }
 
-    // MÉTODOS DE MANIPULAÇÃO DE ALTA DISPONIBILIDADE
-    getTaskRegistry(day) {
-        return this.masterRegistry.filter(task => task.day === day);
+    /**
+     * Retorna lista de usuários para preencher o Select de Login
+     */
+    getUsersList() {
+        return Object.values(this.personnel).sort((a, b) => a.name.localeCompare(b.name));
     }
 
-    getOrganizationData() {
-        return {
-            socios: Object.values(this.organization.socios),
-            controladoria: Object.values(this.organization.controladoria),
-            juridico: Object.values(this.organization.juridico)
-        };
+    /**
+     * Busca um usuário pelo ID
+     */
+    getUserById(id) {
+        return this.personnel[id] || null;
     }
 
-    getUser(id) {
-        const flat = { ...this.organization.socios, ...this.organization.controladoria, ...this.organization.juridico };
-        return flat[id] || null;
+    /**
+     * Retorna tarefas filtradas por dia
+     */
+    getTasksByDay(day) {
+        return this.calendarData.filter(t => t.day === day);
     }
 
-    // Lógica para os próximos 800+ métodos aqui...
+    /**
+     * Retorna tarefas filtradas por dono (para visão individual)
+     */
+    getTasksByOwner(ownerId) {
+        return this.calendarData.filter(t => t.owner === ownerId);
+    }
 }
 
-const BSC_DATA = new BSCDataEngine();
+// Instância Global
+const DataCore = new BSCRepository();
