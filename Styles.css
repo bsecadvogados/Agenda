@@ -1,150 +1,123 @@
-/* BSC ADVOGADOS - DESIGN SYSTEM v2026 */
+/* BSC DESIGN SYSTEM v14.0 (LIGHT MODE) */
 
-/* Reset e Fontes */
-body {
-    background-color: #000;
-    color: #fff;
-}
+/* Scrollbar Customizada */
+.custom-scrollbar::-webkit-scrollbar { width: 6px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 10px; }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #c5a059; }
 
-/* Scrollbar Customizada (Estilo Mac/iOS Dark) */
-.custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+/* Animações Keyframes */
+@keyframes pulse-slow {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(0.95); }
 }
-.custom-scrollbar::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.02);
-}
-.custom-scrollbar::-webkit-scrollbar-thumb {
-    background: rgba(197, 160, 89, 0.3);
-    border-radius: 10px;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: rgba(197, 160, 89, 0.8);
-}
+.animate-pulse-slow { animation: pulse-slow 3s infinite ease-in-out; }
 
-/* Background Image Handling */
-#app-background {
-    background-image: url('background.jpg');
-    background-size: cover;
-    background-position: center;
-    filter: brightness(0.4) contrast(1.1) saturate(0.8);
-    transform: scale(1.05); /* Ligeiro zoom para efeito */
+@keyframes blob {
+    0% { transform: translate(0px, 0px) scale(1); }
+    33% { transform: translate(30px, -50px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+    100% { transform: translate(0px, 0px) scale(1); }
 }
+.animate-blob { animation: blob 7s infinite; }
 
-/* Calendar Cells */
-.calendar-day-header {
+/* Cabeçalho do Dia */
+.day-head {
     text-align: center;
-    color: #c5a059;
     font-size: 10px;
-    font-weight: 900;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 3px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid rgba(197, 160, 89, 0.2);
-    margin-bottom: 15px;
-    position: sticky;
-    top: 0;
-    background: rgba(0,0,0,0.8);
-    z-index: 10;
-    backdrop-filter: blur(5px);
+    color: #c5a059;
+    letter-spacing: 2px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f3f4f6;
 }
 
+/* Célula do Calendário */
 .calendar-cell {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: #ffffff;
+    border: 1px solid #f3f4f6;
     border-radius: 16px;
-    min-height: 250px;
-    padding: 16px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 240px;
+    padding: 15px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
-    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
 }
 
 .calendar-cell:hover {
-    background: rgba(197, 160, 89, 0.05);
-    border-color: rgba(197, 160, 89, 0.4);
-    transform: translateY(-4px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+    border-color: #c5a059;
+    z-index: 10;
 }
 
-/* Day Number Styling */
+/* Número do Dia */
 .day-number {
-    font-size: 14px;
-    font-weight: 900;
-    color: #fff;
-    opacity: 0.1;
-    margin-bottom: 12px;
-    display: block;
     font-family: 'Playfair Display', serif;
-    font-style: italic;
+    font-size: 24px;
+    color: #f3f4f6;
+    font-weight: 700;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    z-index: 0;
+    transition: 0.3s;
 }
 
-.calendar-cell:hover .day-number {
-    opacity: 0.4;
-    color: #c5a059;
-}
+.calendar-cell:hover .day-number { color: #c5a059; opacity: 0.2; }
 
-/* Task Cards */
+/* Card de Tarefa */
 .task-card {
-    background: rgba(10, 10, 10, 0.6);
+    position: relative;
+    z-index: 1;
+    background: #f9fafb;
     border-left: 3px solid #c5a059;
-    border-radius: 6px;
+    border-radius: 8px;
     padding: 12px;
     margin-bottom: 8px;
     cursor: grab;
     transition: all 0.2s ease;
-    border: 1px solid rgba(255,255,255,0.02);
-}
-
-.task-card:active {
-    cursor: grabbing;
-    transform: scale(0.98);
+    border-top: 1px solid transparent;
+    border-right: 1px solid transparent;
+    border-bottom: 1px solid transparent;
 }
 
 .task-card:hover {
-    background: rgba(197, 160, 89, 0.1);
-    border: 1px solid rgba(197, 160, 89, 0.3);
-    border-left: 3px solid #fff;
+    background: #ffffff;
+    border-color: #e5e7eb;
+    border-left-color: #c5a059;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    transform: scale(1.02);
 }
 
-.task-time {
-    font-size: 10px;
-    font-weight: 800;
-    color: #c5a059;
-    display: block;
-    margin-bottom: 4px;
-}
+.task-card:active { cursor: grabbing; transform: scale(0.98); }
 
-.task-title {
-    font-size: 10px;
-    font-weight: 500;
-    color: #e5e5e5;
-    line-height: 1.4;
-}
-
-.task-owner-badge {
+/* Badges de Status */
+.status-badge {
     display: inline-block;
-    font-size: 7px;
+    font-size: 8px;
+    font-weight: 800;
     text-transform: uppercase;
-    background: rgba(255,255,255,0.1);
     padding: 2px 6px;
     border-radius: 4px;
-    margin-top: 8px;
-    color: #aaa;
-    font-weight: 700;
+    float: right;
 }
+.st-pendente { background: #f3f4f6; color: #9ca3af; }
+.st-iniciado { background: #eff6ff; color: #3b82f6; }
+.st-concluido { background: #ecfdf5; color: #10b981; }
+.st-urgente { background: #fef2f2; color: #ef4444; }
 
-/* Status Colors */
-.status-urgente { border-left-color: #ef4444; }
-.status-concluido { border-left-color: #10b981; opacity: 0.6; }
-.status-iniciado { border-left-color: #3b82f6; }
-
-/* Animações */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+/* Sidebar User Item */
+.sidebar-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
 }
-
-.animate-fade-in {
-    animation: fadeIn 0.8s ease forwards;
-}
+.sidebar-user:hover { background-color: #f9fafb; }
+.sidebar-user img { transition: 0.3s; }
+.sidebar-user:hover img { border-color: #c5a059; }
