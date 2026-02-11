@@ -3,242 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BSC Advogados | Sistema de Gestão Estratégica</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <title>BSC Advogados | Enterprise Resource Planning</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        :root { --brand-gold: #c5a059; --dark-bg: #0a0a0a; }
-        body { font-family: 'Montserrat', sans-serif; background-color: var(--dark-bg); color: white; overflow-x: hidden; }
-        
-        .glass-card {
-            background: rgba(20, 20, 20, 0.8);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(197, 160, 89, 0.2);
-            border-radius: 1rem;
-            transition: all 0.3s ease;
+        :root {
+            --gold: #c5a059;
+            --gold-dark: #a38446;
+            --deep-black: #050505;
+            --glass: rgba(18, 18, 18, 0.9);
         }
 
-        .hero-bg {
-            background-image: linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(0,0,0,0.7), rgba(0,0,0,1)), 
-                              url('https://images.unsplash.com/photo-1453928582365-b6ad33cbcf64?q=80&w=2073');
-            background-size: cover; background-position: center; background-attachment: fixed;
+        /* Scrollbar Personalizada */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--deep-black); }
+        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--deep-black);
+            color: #e5e5e5;
+            overflow-x: hidden;
         }
 
-        .status-badge { font-size: 9px; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; font-weight: bold; }
-        .status-pendente { background: rgba(156, 163, 175, 0.2); color: #9ca3af; }
-        .status-iniciado { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
-        .status-concluido { background: rgba(16, 185, 129, 0.2); color: #10b981; }
-        .status-atrasado { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
-        .status-cancelado { background: rgba(0, 0, 0, 0.5); color: #ffffff; text-decoration: line-through; }
+        .font-serif-legal { font-family: 'Playfair Display', serif; }
 
-        /* Estilo para Drag and Drop */
-        .task-card { cursor: grab; }
-        .task-card:active { cursor: grabbing; }
-        .drop-zone-active { border: 2px dashed var(--brand-gold) !important; background: rgba(197, 160, 89, 0.1) !important; }
-        
-        .user-avatar { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--brand-gold); object-cover: cover; transition: 0.3s; }
-        .user-avatar:hover { transform: scale(1.1); box-shadow: 0 0 15px rgba(197, 160, 89, 0.5); }
-        
-        .hidden { display: none; }
+        /* Animações de Entrada */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade { animation: fadeIn 0.8s ease forwards; }
+
+        /* Glassmorphism Avançado */
+        .glass-panel {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(197, 160, 89, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+        }
+
+        .gold-gradient-text {
+            background: linear-gradient(to right, #c5a059, #f9f1c0, #c5a059);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Efeito de Hover nos Cards */
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+            box-shadow: 0 10px 20px rgba(197, 160, 89, 0.1);
+        }
+
+        /* Sistema de Drag and Drop Visual */
+        .dragging { opacity: 0.5; border: 2px dashed var(--gold) !important; }
+        .drop-target { background: rgba(197, 160, 89, 0.05) !important; border: 2px solid var(--gold) !important; }
+
+        /* Overlay de Background */
+        .bg-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(30, 30, 30, 1) 0%, rgba(5, 5, 5, 1) 100%);
+            z-index: -1;
+        }
     </style>
 </head>
-<body class="hero-bg min-h-screen">
+<body>
+    <div class="bg-overlay"></div>
 
-    <div id="login-screen" class="flex items-center justify-center min-h-screen px-4">
-        <div class="glass-card p-10 w-full max-w-md text-center">
-            <div class="mb-8">
-                <h1 class="text-3xl font-bold tracking-[0.2em]">BSC</h1>
-                <p class="text-[10px] text-[#c5a059] uppercase tracking-[0.3em]">Advogados Associados</p>
-            </div>
+    <div id="login-module" class="min-h-screen flex items-center justify-center p-4">
+        <div class="glass-panel p-12 rounded-2xl w-full max-w-lg animate-fade relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-right from-transparent via-[#c5a059] to-transparent"></div>
             
-            <div class="space-y-5 text-left">
+            <div class="text-center mb-10">
+                <h1 class="text-4xl font-serif-legal font-bold gold-gradient-text mb-2 tracking-tighter">BSC</h1>
+                <p class="text-[10px] uppercase tracking-[0.5em] text-gray-500 font-bold">Advogados & Associados</p>
+            </div>
+
+            <div class="space-y-6">
                 <div>
-                    <label class="text-[10px] uppercase text-[#c5a059] font-bold">Acessar como:</label>
-                    <select id="username" class="w-full bg-white/5 border border-white/10 p-3 rounded mt-1 focus:border-[#c5a059] outline-none text-sm">
-                        <option value="BSC ADVOGADOS" class="bg-black">ADMINISTRAÇÃO (Geral)</option>
-                        <option value="Iago Manguary" class="bg-black">Iago Manguary</option>
-                        <option value="Geovana Alexassandra" class="bg-black">Geovana Alexassandra</option>
-                        <option value="Abimael Francisco" class="bg-black">Abimael Francisco</option>
-                        <option value="Felipe dos Santos" class="bg-black">Felipe dos Santos</option>
-                    </select>
+                    <label class="block text-[10px] uppercase tracking-widest text-[#c5a059] mb-2 ml-1">Usuário Autorizado</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-user-tie absolute left-4 top-1/2 -translate-y-1/2 text-gray-600"></i>
+                        <select id="user-select" class="w-full bg-white/5 border border-white/10 p-4 pl-12 rounded-lg focus:border-[#c5a059] outline-none transition text-sm appearance-none">
+                            <option value="BSC_GERAL" class="bg-neutral-900">BSC ADVOGADOS (ADMIN)</option>
+                            <option value="GE" class="bg-neutral-900">Geovana Alexassandra</option>
+                            <option value="AF" class="bg-neutral-900">Abimael Francisco</option>
+                            <option value="FS" class="bg-neutral-900">Felipe dos Santos</option>
+                            <option value="IM" class="bg-neutral-900">Iago Manguary</option>
+                        </select>
+                    </div>
                 </div>
-                <div id="password-field">
-                    <label class="text-[10px] uppercase text-[#c5a059] font-bold">Senha</label>
-                    <input type="password" id="password" placeholder="••••••••" class="w-full bg-white/5 border border-white/10 p-3 rounded mt-1 focus:border-[#c5a059] outline-none transition">
+
+                <div id="pass-container">
+                    <label class="block text-[10px] uppercase tracking-widest text-[#c5a059] mb-2 ml-1">Chave de Acesso</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-600"></i>
+                        <input type="password" id="user-pass" placeholder="••••••••" class="w-full bg-white/5 border border-white/10 p-4 pl-12 rounded-lg focus:border-[#c5a059] outline-none transition text-sm">
+                    </div>
                 </div>
-                <button onclick="handleLogin()" class="w-full bg-[#c5a059] text-black font-bold py-3 rounded hover:bg-[#d4b57a] transition uppercase tracking-widest text-sm shadow-lg shadow-gold/20">
-                    Entrar na Agenda
+
+                <button onclick="AuthController.login()" class="w-full bg-gradient-to-r from-[#c5a059] to-[#a38446] text-black font-bold py-4 rounded-lg hover:brightness-110 transition shadow-xl shadow-gold/10 uppercase text-xs tracking-[0.2em] mt-4">
+                    Autenticar Sistema
                 </button>
             </div>
+            
+            <p class="text-center text-[9px] mt-8 opacity-30 uppercase tracking-widest italic">Acesso restrito à rede interna BSC</p>
         </div>
     </div>
 
-    <div id="dashboard" class="container mx-auto px-4 py-8 hidden">
-        <header class="flex flex-col md:flex-row justify-between items-center mb-12 border-b border-white/10 pb-8 gap-6">
-            <div class="flex items-center gap-6">
-                <img id="current-user-img" src="" class="w-20 h-20 rounded-full border-2 border-[#c5a059] object-cover shadow-xl shadow-[#c5a059]/10">
+    <div id="main-dashboard" class="hidden min-h-screen">
+        <aside class="fixed left-0 top-0 h-full w-20 glass-panel flex flex-col items-center py-8 z-50 border-r border-white/5">
+            <div class="mb-12 font-serif-legal font-bold text-xl text-[#c5a059]">BSC</div>
+            <nav class="flex flex-col gap-8">
+                <button class="text-[#c5a059] hover:scale-110 transition"><i class="fa-solid fa-calendar-days text-xl"></i></button>
+                <button class="text-gray-600 hover:text-[#c5a059] transition"><i class="fa-solid fa-briefcase text-xl"></i></button>
+                <button class="text-gray-600 hover:text-[#c5a059] transition"><i class="fa-solid fa-users text-xl"></i></button>
+                <button class="text-gray-600 hover:text-[#c5a059] transition"><i class="fa-solid fa-chart-line text-xl"></i></button>
+            </nav>
+            <button onclick="AuthController.logout()" class="mt-auto text-gray-600 hover:text-red-500 transition"><i class="fa-solid fa-right-from-bracket text-xl"></i></button>
+        </aside>
+
+        <main class="pl-24 pr-8 py-8">
+            <header class="flex justify-between items-end mb-12 animate-fade">
                 <div>
-                    <h2 id="welcome-title" class="text-2xl font-bold tracking-tight">Dr. Usuário</h2>
-                    <p id="user-role" class="text-[#c5a059] text-xs uppercase tracking-widest">Acesso Estratégico</p>
+                    <div class="flex items-center gap-4 mb-2">
+                        <img id="header-avatar" src="" class="w-12 h-12 rounded-full border border-[#c5a059]">
+                        <h2 id="display-user-name" class="text-3xl font-light tracking-tight">Dr. Iago Manguary</h2>
+                    </div>
+                    <p id="display-user-role" class="text-[10px] text-[#c5a059] uppercase tracking-[0.4em] font-bold">Gestor Administrativo</p>
                 </div>
-            </div>
-            
-            <div class="flex gap-4">
                 <div class="text-right">
-                    <p class="text-[#c5a059] font-bold text-xl uppercase tracking-tighter" id="current-date">Fevereiro 2026</p>
-                    <p class="text-[10px] opacity-50 uppercase tracking-widest">Palmas, Tocantins</p>
+                    <p id="clock-display" class="text-2xl font-light">10:45:00</p>
+                    <p class="text-[10px] opacity-40 uppercase tracking-widest" id="full-date">Quarta-feira, 11 de Fevereiro de 2026</p>
                 </div>
-                <button onclick="logout()" class="bg-white/5 hover:bg-red-900/20 border border-white/10 px-4 py-2 rounded text-[10px] uppercase transition">Sair</button>
-            </div>
-        </header>
+            </header>
 
-        <h3 class="text-[10px] uppercase text-[#c5a059] mb-4 tracking-[0.2em] font-bold">Corpo Jurídico & Responsáveis</h3>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16" id="team-grid">
-            </div>
+            <section class="mb-12">
+                <div class="flex items-center gap-4 mb-6">
+                    <h3 class="text-xs uppercase tracking-[0.3em] text-[#c5a059] font-bold">Corpo Jurídico</h3>
+                    <div class="h-[1px] flex-grow bg-white/5"></div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="team-container">
+                    </div>
+            </section>
 
-        <div class="flex justify-between items-center mb-6">
-            <h3 class="text-[10px] uppercase text-[#c5a059] tracking-[0.2em] font-bold">Tarefas & Compromissos</h3>
-            <span class="text-[10px] opacity-40 italic font-light">* Arraste tarefas para os responsáveis para realocá-las</span>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="agenda-container">
-            </div>
-
-        <footer class="mt-20 text-center border-t border-white/5 pt-8 opacity-30 text-[9px] uppercase tracking-[0.5em]">
-            BSC Advogados Associados © 2026 | Inteligência Jurídica
-        </footer>
+            <section>
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center gap-4">
+                        <h3 class="text-xs uppercase tracking-[0.3em] text-[#c5a059] font-bold">Cronograma Estratégico</h3>
+                    </div>
+                    <button onclick="UIController.openNewTaskModal()" class="bg-white/5 border border-white/10 px-4 py-2 rounded-full text-[10px] uppercase hover:bg-[#c5a059] hover:text-black transition">
+                        <i class="fa-solid fa-plus mr-2"></i>Novo Compromisso
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="tasks-grid">
+                    </div>
+            </section>
+        </main>
     </div>
 
-    <script>
-        // BANCO DE DADOS LOCAL (Simulação)
-        const users = {
-            "Iago Manguary": { role: "Gestor Administrativo", img: "https://i.pravatar.cc/150?u=iago" },
-            "Geovana Alexassandra": { role: "Advogada Sócia", img: "https://i.pravatar.cc/150?u=geovana" },
-            "Abimael Francisco": { role: "Advogado Sócio", img: "https://i.pravatar.cc/150?u=abimael" },
-            "Felipe dos Santos": { role: "Advogado Associado", img: "https://i.pravatar.cc/150?u=felipe" },
-            "BSC ADVOGADOS": { role: "Administração Geral", img: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png" }
-        };
-
-        let tasks = [
-            { id: 101, owner: "Geovana Alexassandra", title: "Audiência Conciliação - Caso Rural", time: "09:00", status: "pendente", type: "Audiência" },
-            { id: 102, owner: "Iago Manguary", title: "Análise de Contratos OILEMA", time: "10:30", status: "iniciado", type: "Contratos" },
-            { id: 103, owner: "Abimael Francisco", title: "Parecer Técnico - Cédula Rural", time: "14:00", status: "pendente", type: "Jurídico" },
-            { id: 104, owner: "Felipe dos Santos", title: "Protocolo de Defesa Prévia", time: "16:00", status: "atrasado", type: "Prazo" },
-            { id: 105, owner: "Geral", title: "Reunião Geral de Sócios", time: "18:00", status: "pendente", type: "Estratégia" }
-        ];
-
-        let currentUser = "";
-
-        function handleLogin() {
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
-
-            // Lógica de senha (Iago tem senha, BSC Geral não tem)
-            if (user === "BSC ADVOGADOS" || pass !== "") {
-                currentUser = user;
-                initDashboard();
-            } else {
-                alert("Por favor, insira a senha para este usuário.");
-            }
-        }
-
-        function initDashboard() {
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('dashboard').classList.remove('hidden');
-            
-            document.getElementById('current-user-img').src = users[currentUser].img;
-            document.getElementById('welcome-title').innerText = currentUser;
-            document.getElementById('user-role').innerText = users[currentUser].role;
-
-            renderTeam();
-            renderAgenda();
-        }
-
-        function renderTeam() {
-            const grid = document.getElementById('team-grid');
-            grid.innerHTML = '';
-            
-            Object.keys(users).forEach(name => {
-                if (name === "BSC ADVOGADOS") return;
-                
-                const div = document.createElement('div');
-                div.className = `glass-card p-4 text-center border-2 border-transparent transition-all`;
-                div.id = `drop-zone-${name.replace(/\s/g, '')}`;
-                
-                // Eventos de Drag and Drop
-                div.ondragover = (e) => { e.preventDefault(); div.classList.add('drop-zone-active'); };
-                div.ondragleave = () => div.classList.remove('drop-zone-active');
-                div.ondrop = (e) => handleDrop(e, name);
-
-                div.innerHTML = `
-                    <img src="${users[name].img}" class="user-avatar mx-auto mb-3">
-                    <h4 class="text-[11px] font-bold uppercase text-white">${name}</h4>
-                    <p class="text-[8px] text-[#c5a059] opacity-70">${users[name].role}</p>
-                `;
-                grid.appendChild(div);
-            });
-        }
-
-        function renderAgenda() {
-            const container = document.getElementById('agenda-container');
-            container.innerHTML = '';
-
-            // Se for login individual, filtra apenas as do usuário. Se for BSC, mostra tudo.
-            const filtered = (currentUser === "BSC ADVOGADOS") 
-                ? tasks 
-                : tasks.filter(t => t.owner === currentUser || t.owner === "Geral");
-
-            filtered.forEach(task => {
-                const card = document.createElement('div');
-                card.className = 'glass-card p-5 task-card';
-                card.draggable = true;
-                card.ondragstart = (e) => { e.dataTransfer.setData("taskId", task.id); };
-
-                card.innerHTML = `
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="text-[9px] font-bold text-[#c5a059] uppercase">${task.type}</span>
-                        <span onclick="cycleStatus(${task.id})" class="status-badge status-${task.status} cursor-pointer hover:brightness-125 transition">
-                            ${task.status}
-                        </span>
-                    </div>
-                    <h4 class="text-sm font-semibold mb-2">${task.title}</h4>
-                    <div class="flex justify-between items-center mt-4">
-                        <span class="text-[10px] opacity-40"><i class="far fa-clock"></i> ${task.time}</span>
-                        <span class="text-[9px] px-2 py-1 bg-white/5 rounded border border-white/10 italic">${task.owner}</span>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        // Lógica de realocação
-        function handleDrop(e, newOwner) {
-            e.preventDefault();
-            const taskId = e.dataTransfer.getData("taskId");
-            const div = document.getElementById(`drop-zone-${newOwner.replace(/\s/g, '')}`);
-            div.classList.remove('drop-zone-active');
-
-            // Atualiza o "banco de dados"
-            const taskIndex = tasks.findIndex(t => t.id == taskId);
-            if (taskIndex !== -1) {
-                tasks[taskIndex].owner = newOwner;
-                renderAgenda();
-                // Notificação visual simples
-                console.log(`Tarefa ${taskId} realocada para ${newOwner}`);
-            }
-        }
-
-        function cycleStatus(id) {
-            const statusFlow = ["pendente", "iniciado", "atrasado", "concluido", "cancelado"];
-            const task = tasks.find(t => t.id == id);
-            let currentIdx = statusFlow.indexOf(task.status);
-            task.status = statusFlow[(currentIdx + 1) % statusFlow.length];
-            renderAgenda();
-        }
-
-        function logout() {
-            location.reload();
-        }
-    </script>
-</body>
+    </body>
 </html>
