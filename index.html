@@ -3,135 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BSC Advogados | ERP Strategos Enterprise</title>
+    <title>BSC Advogados | ERP Strategos Enterprise v19</title>
     
+    <script>
+        window.onerror = function(msg, url, line) {
+            console.error("Erro Crítico:", msg);
+            // Se der erro, remove o loader e mostra o erro
+            const loader = document.getElementById('system-loader');
+            if(loader) loader.innerHTML = `<div style="color:red; text-align:center; padding:20px;">ERRO DE SCRIPT:<br>${msg}<br>Linha: ${line}</div>`;
+        };
+    </script>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
     <link rel="stylesheet" href="Styles.css">
 </head>
 <body>
 
-    <div class="app-background"></div>
+    <div class="app-bg"></div>
 
     <div id="system-loader">
         <div class="loader-content">
-            <img src="logo.png" alt="BSC Logo" class="loader-logo">
-            <h2 class="loader-title">Carregando Inteligência</h2>
-            
-            <div class="loader-track">
-                <div id="loader-bar" class="loader-fill"></div>
+            <img src="logo.png" alt="BSC" class="loader-logo">
+            <h2 class="loader-text">Carregando Inteligência</h2>
+            <div class="loader-bar-bg">
+                <div id="loader-bar" class="loader-bar-fill"></div>
             </div>
-            
-            <p id="loader-status">Inicializando módulos de segurança...</p>
+            <p id="loader-status">Inicializando módulos...</p>
         </div>
     </div>
 
-    <div id="auth-screen" class="hidden-force">
+    <div id="auth-modal" class="hidden-start">
         <div class="auth-card">
-            <img src="logo.png" alt="BSC" class="auth-logo">
-            <p class="auth-subtitle">Acesso Corporativo Restrito</p>
-
-            <div class="auth-form">
-                <div class="input-group">
-                    <label>Usuário Autorizado</label>
-                    <div class="select-wrapper">
-                        <select id="login-user">
-                            </select>
-                        <i class="fa-solid fa-chevron-down"></i>
+            <div class="text-center mb-8">
+                <img src="logo.png" class="w-40 mx-auto">
+                <p class="text-[10px] text-gray-400 uppercase tracking-[2px] mt-4 font-bold">Acesso Corporativo</p>
+            </div>
+            
+            <div class="space-y-5">
+                <div>
+                    <label class="block text-[10px] uppercase font-bold text-gray-500 mb-1">Identificação</label>
+                    <div class="relative">
+                        <select id="login-user" class="w-full bg-gray-50 border border-gray-200 p-4 rounded-xl text-xs font-bold text-gray-700 outline-none focus:border-[#c5a059]">
+                            <option>Carregando usuários...</option> 
+                        </select>
+                        <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none"></i>
                     </div>
                 </div>
-
-                <div class="input-group">
-                    <label>Senha de Acesso</label>
-                    <input type="password" id="login-pass" placeholder="••••••••">
+                <div>
+                    <label class="block text-[10px] uppercase font-bold text-gray-500 mb-1">Chave de Segurança</label>
+                    <input type="password" id="login-pass" class="w-full bg-gray-50 border border-gray-200 p-4 rounded-xl text-xs outline-none focus:border-[#c5a059]" placeholder="••••••••">
                 </div>
-
-                <button onclick="Engine.attemptLogin()" class="btn-login">
-                    Acessar ERP
+                <button onclick="Engine.login()" class="w-full bg-[#c5a059] text-white font-bold py-4 rounded-xl uppercase text-[11px] tracking-[3px] hover:bg-[#a68545] shadow-lg transition-all active:scale-95">
+                    Entrar
                 </button>
-            </div>
-            
-            <div class="auth-footer">
-                <p>BSC Advogados Associados © 2026</p>
             </div>
         </div>
     </div>
 
-    <div id="dashboard-ui" class="hidden-force">
+    <div id="main-interface" class="hidden-start">
         
         <aside class="sidebar">
-            <div class="sidebar-header">
-                <img src="logo.png" class="sidebar-logo">
-            </div>
-
-            <div class="sidebar-nav custom-scroll">
-                <div class="nav-section">
-                    <h3>Sócios & Diretoria</h3>
-                    <div id="list-partners" class="nav-list"></div>
+            <img src="logo.png" class="w-36 mx-auto mb-10 hover:opacity-80 transition cursor-pointer">
+            
+            <div class="flex-grow overflow-y-auto custom-scroll pr-2 space-y-8">
+                <div>
+                    <h3 class="text-[10px] uppercase font-bold text-gray-400 mb-4 pl-3 border-l-2 border-[#c5a059]">Sócios</h3>
+                    <div id="list-partners" class="space-y-2"></div>
                 </div>
-                
-                <div class="nav-section">
-                    <h3>Staff Jurídico</h3>
-                    <div id="list-staff" class="nav-list"></div>
+                <div>
+                    <h3 class="text-[10px] uppercase font-bold text-gray-400 mb-4 pl-3 border-l-2 border-[#c5a059]">Staff Jurídico</h3>
+                    <div id="list-staff" class="space-y-2"></div>
                 </div>
             </div>
 
-            <div class="sidebar-footer" onclick="location.reload()">
-                <img id="user-avatar" src="" alt="User">
-                <div class="user-info">
-                    <p id="user-name"></p>
-                    <p id="user-role"></p>
+            <div class="mt-6 pt-6 border-t border-gray-100 flex items-center gap-4 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition" onclick="location.reload()">
+                <img id="user-avatar" src="" class="w-10 h-10 rounded-full border border-gray-200 object-cover">
+                <div>
+                    <p id="user-name" class="text-[10px] font-bold uppercase text-gray-800"></p>
+                    <p id="user-role" class="text-[8px] text-[#c5a059] font-bold uppercase"></p>
                 </div>
-                <i class="fa-solid fa-power-off logout-icon"></i>
+                <i class="fa-solid fa-power-off ml-auto text-gray-300 hover:text-red-500"></i>
             </div>
         </aside>
 
-        <main class="main-content custom-scroll">
-            <header class="top-header">
+        <main class="workspace custom-scroll">
+            <header class="flex justify-between items-end mb-12">
                 <div>
-                    <h1 class="page-title">Fevereiro <span class="highlight">2026</span></h1>
-                    <div class="breadcrumbs">
-                        <span>Palmas - TO</span>
-                        <span>Gestão Estratégica</span>
+                    <h1 class="text-5xl font-serif font-bold text-gray-800 italic">Fevereiro <span class="text-[#c5a059] not-italic font-sans">2026</span></h1>
+                    <div class="flex gap-3 mt-3">
+                        <span class="px-3 py-1 bg-white border border-gray-200 rounded text-[9px] font-bold text-gray-500 uppercase tracking-wider">Palmas - TO</span>
+                        <span class="px-3 py-1 bg-white border border-gray-200 rounded text-[9px] font-bold text-gray-500 uppercase tracking-wider">Gestão Estratégica</span>
                     </div>
                 </div>
-                <div class="clock-widget">
-                    <p id="clock-time">00:00:00</p>
-                    <p id="clock-date">Carregando data...</p>
+                <div class="text-right">
+                    <p id="clock" class="text-5xl font-light text-gray-700 tracking-tighter tabular-nums">00:00:00</p>
+                    <p id="date" class="text-[10px] font-bold text-[#c5a059] uppercase tracking-[3px] mt-1"></p>
                 </div>
             </header>
 
-            <div class="calendar-wrapper">
-                <div class="week-header">
-                    <div>Dom</div><div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div>
-                </div>
-                <div id="calendar-grid" class="days-grid">
-                    </div>
+            <div class="week-header">
+                <div>Domingo</div><div>Segunda</div><div>Terça</div><div>Quarta</div><div>Quinta</div><div>Sexta</div><div>Sábado</div>
             </div>
+
+            <div id="calendar-grid" class="calendar-grid">
+                </div>
         </main>
     </div>
 
     <script src="Data.js"></script>
     <script src="Engine.js"></script>
-
+    
     <script>
-        setTimeout(() => {
+        setTimeout(function() {
             const loader = document.getElementById('system-loader');
-            const auth = document.getElementById('auth-screen');
-            // Se o loader ainda estiver visível após 6 segundos, forçar login
-            if (loader && loader.style.display !== 'none') {
-                console.warn("Forçando inicialização de emergência...");
-                loader.style.display = 'none';
-                auth.style.display = 'flex';
+            // Se o loader ainda estiver visível após 3.5 segundos...
+            if(loader && loader.style.display !== 'none') {
+                console.warn("Resgate de Sistema Ativado.");
+                loader.style.display = 'none'; // Mata o loader
+                const auth = document.getElementById('auth-modal');
+                auth.style.display = 'flex'; // Força o login
                 auth.style.opacity = '1';
-                // Tenta popular o login mesmo com falha
+                
+                // Tenta preencher o login na marra se o Data.js carregou
                 if(typeof DataCore !== 'undefined' && typeof Engine !== 'undefined') {
-                    Engine.populateLoginEmergency();
+                    Engine.populateLogin();
                 }
             }
-        }, 6000);
+        }, 3500);
     </script>
 </body>
 </html>
