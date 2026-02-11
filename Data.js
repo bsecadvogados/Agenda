@@ -1,165 +1,78 @@
 /**
- * BSC ADVOGADOS - ENTERPRISE DATA MODULE
- * Versão: 2.0.1
- * Descrição: Gerenciamento de estado, usuários e persistência de tarefas.
+ * BSC ADVOGADOS - DATABASE LAYER (v3.0.0)
+ * Totalmente mapeado com o Calendário de Fevereiro/2026
  */
 
 const BSC_DATA = (() => {
-    // Configurações Globais do Escritório
-    const config = {
-        officeName: "BSC Advogados & Associados",
-        location: "Palmas, Tocantins",
-        specialty: "Direito Agrário & Agronegócio",
-        workingHours: { start: "08:00", end: "18:00" }
+    // Configurações de Escritório
+    const officeMetadata = {
+        unit: "Palmas - TO",
+        specialization: "Direito Agrário & Business",
+        year: 2026
     };
 
-    // Banco de Dados de Usuários (Com as fotos e permissões)
+    // Mapeamento Completo de Usuários e Fotos
     const users = {
-        "IM": {
-            id: "IM",
-            full_name: "Iago Manguary",
-            role: "Gestor Administrativo",
-            avatar: "https://i.pravatar.cc/150?u=iago_manguary", // Substituir pelas fotos reais
-            password: "123",
-            permissions: ["all"],
-            color: "#c5a059"
-        },
-        "GE": {
-            id: "GE",
-            full_name: "Geovana Alexassandra",
-            role: "Advogada Sócia",
-            avatar: "https://i.pravatar.cc/150?u=geovana_alex",
-            password: "bsc_geovana",
-            permissions: ["legal", "tasks"],
-            color: "#3b82f6"
-        },
-        "AF": {
-            id: "AF",
-            full_name: "Abimael Francisco",
-            role: "Advogado Sócio",
-            avatar: "https://i.pravatar.cc/150?u=abimael_fran",
-            password: "bsc_abimael",
-            permissions: ["legal", "tasks"],
-            color: "#10b981"
-        },
-        "FS": {
-            id: "FS",
-            full_name: "Felipe dos Santos",
-            role: "Advogado Associado",
-            avatar: "https://i.pravatar.cc/150?u=felipe_santos",
-            password: "bsc_felipe",
-            permissions: ["legal", "tasks"],
-            color: "#8b5cf6"
-        },
-        "BSC_GERAL": {
-            id: "BSC_GERAL",
-            full_name: "ADMINISTRAÇÃO BSC",
-            role: "Visão Master do Escritório",
-            avatar: "https://cdn-icons-png.flaticon.com/512/2919/2919600.png",
-            password: "", // Sem senha conforme solicitado
-            permissions: ["all"],
-            color: "#ffffff"
-        }
+        "IM": { id: "IM", full_name: "Iago Manguary", role: "Gestor Administrativo", avatar: "iago.jpg", password: "123" },
+        "GE": { id: "GE", full_name: "Geovana Alexassandra", role: "Advogada Sócia", avatar: "geovana.jpg", password: "bsc1" },
+        "AF": { id: "AF", full_name: "Abimael Francisco", role: "Advogado Sócio", avatar: "abimael.jpg", password: "bsc2" },
+        "FS": { id: "FS", full_name: "Felipe dos Santos", role: "Advogado Associado", avatar: "felipe.jpg", password: "bsc3" },
+        "BSC_GERAL": { id: "BSC_GERAL", full_name: "ADMINISTRAÇÃO", role: "Visão Master", avatar: "logo.png", password: "" }
     };
 
-    // Banco de Dados de Tarefas Iniciais (Mock Data)
-    // Aqui detalhei compromissos típicos do seu dia a dia (Agro, CPR, BNI)
+    /**
+     * INJEÇÃO DE DADOS REAIS - CALENDÁRIO FEVEREIRO 2026
+     * Cada objeto representa um compromisso real da imagem enviada.
+     */
     let tasks = [
-        {
-            id: "TASK-001",
-            ownerId: "GE",
-            title: "Audiência de Conciliação - Fazenda Boa Esperança",
-            description: "Litígio de divisa de terras, processo 00213-45.",
-            time: "09:30",
-            date: "2026-02-11",
-            status: "pendente",
-            category: "Audiência",
-            priority: "alta"
-        },
-        {
-            id: "TASK-002",
-            ownerId: "IM",
-            title: "Revisão de Contrato CPR - Grupo Oilema",
-            description: "Análise de garantias e cláusulas de entrega física.",
-            time: "11:00",
-            date: "2026-02-11",
-            status: "iniciado",
-            category: "Contratos",
-            priority: "urgente"
-        },
-        {
-            id: "TASK-003",
-            ownerId: "AF",
-            title: "Parecer Técnico: Regularização Fundiária",
-            description: "Análise de matrícula no cartório de registro de imóveis.",
-            time: "14:30",
-            date: "2026-02-11",
-            status: "pendente",
-            category: "Jurídico",
-            priority: "media"
-        },
-        {
-            id: "TASK-004",
-            ownerId: "FS",
-            title: "Protocolo de Defesa Prévia - Caso Ambiental",
-            description: "Multa do IBAMA sobre reserva legal.",
-            time: "16:45",
-            date: "2026-02-11",
-            status: "atrasado",
-            category: "Prazos",
-            priority: "alta"
-        },
-        {
-            id: "TASK-005",
-            ownerId: "IM",
-            title: "Azi Comunicação: Planejamento Marketing Agro",
-            description: "Definição de cronograma de posts para o escritório.",
-            time: "17:30",
-            date: "2026-02-11",
-            status: "pendente",
-            category: "Marketing",
-            priority: "media"
-        }
+        // SEGUNDA - 02/02
+        { id: "T202", ownerId: "GE", title: "Audiência Conciliação - Rafael Zanini x Antonio Mendes", time: "09:15", date: "2026-02-02", status: "pendente", category: "Audiência", priority: "alta" },
+        { id: "T203", ownerId: "AF", title: "Impugnar Cumprimento de Sentença - TAUILE x SANNA", time: "16:30", date: "2026-02-02", status: "pendente", category: "Jurídico", priority: "urgente" },
+        
+        // TERÇA - 03/02
+        { id: "T301", ownerId: "FS", title: "Reunião - Souzamaas", time: "14:00", date: "2026-02-03", status: "iniciado", category: "Reunião", priority: "media" },
+        { id: "T302", ownerId: "GE", title: "Realização de Defesa Prévia - TRANSPORTE BRAGA BORGES", time: "15:30", date: "2026-02-03", status: "pendente", category: "Jurídico", priority: "alta" },
+
+        // QUARTA - 04/02 (Dia Carregado)
+        { id: "T401", ownerId: "IM", title: "Viagem à LUÍS EDUARDO MAGALHÃES", time: "Dia Inteiro", date: "2026-02-04", status: "pendente", category: "Viagem", priority: "urgente" },
+        { id: "T402", ownerId: "AF", title: "Redistribuir Processo - ZANINIZANINI x ALESSANDRO", time: "08:30", date: "2026-02-04", status: "concluido", category: "Gestão", priority: "baixa" },
+        { id: "T403", ownerId: "IM", title: "Reunião BNI Jalapão", time: "07:00", date: "2026-02-04", status: "concluido", category: "Networking", priority: "alta" },
+        { id: "T404", ownerId: "IM", title: "Atualização Cadastral/Boletos - JK BUSINESS", time: "09:30", date: "2026-02-04", status: "pendente", category: "Financeiro", priority: "media" },
+
+        // QUINTA - 05/02
+        { id: "T501", ownerId: "GE", title: "Reunião RAFAEL ZANINI - LEM", time: "08:00", date: "2026-02-05", status: "pendente", category: "Reunião", priority: "alta" },
+        { id: "T502", ownerId: "IM", title: "Módulo - BNI Jalapão", time: "11:00", date: "2026-02-05", status: "pendente", category: "Capacitação", priority: "media" },
+        { id: "T503", ownerId: "AF", title: "Notificação Extrajudicial - Rafael Zanini x DR MATHEUS", time: "15:30", date: "2026-02-05", status: "pendente", category: "Jurídico", priority: "alta" },
+
+        // SEXTA - 06/02
+        { id: "T601", ownerId: "IM", title: "Inauguração - Escritório AUBE", time: "Dia Inteiro", date: "2026-02-06", status: "pendente", category: "Evento", priority: "media" },
+        { id: "T602", ownerId: "FS", title: "Informar Novo Endereço - ZANINI x ANTONIO CARLOS", time: "08:30", date: "2026-02-06", status: "pendente", category: "Administrativo", priority: "baixa" },
+
+        // SÁBADO - 07/02
+        { id: "T701", ownerId: "IM", title: "Dia de Campo - OILEMA", time: "Dia Inteiro", date: "2026-02-07", status: "pendente", category: "Agro", priority: "alta" }
     ];
 
-    // Funções de Gerenciamento de Estado
+    // Lógica Sênior para Manipulação de Estado
     return {
         getUsers: () => users,
         getUserById: (id) => users[id],
+        getTasks: (userId) => (userId === "BSC_GERAL" ? tasks : tasks.filter(t => t.ownerId === userId)),
         
-        getTasks: (filterUserId = null) => {
-            if (!filterUserId || filterUserId === "BSC_GERAL") return tasks;
-            return tasks.filter(t => t.ownerId === filterUserId);
-        },
-
+        // FUNÇÃO DE REALOCAÇÃO (A que você pediu para os Drs)
         updateTaskOwner: (taskId, newOwnerId) => {
             const task = tasks.find(t => t.id === taskId);
             if (task) {
                 task.ownerId = newOwnerId;
-                console.log(`[DATA] Tarefa ${taskId} realocada para ${newOwnerId}`);
                 return true;
             }
             return false;
         },
 
-        updateTaskStatus: (taskId) => {
-            const statusFlow = ["pendente", "iniciado", "atrasado", "concluido", "cancelado"];
-            const task = tasks.find(t => t.id === taskId);
-            if (task) {
-                let currentIdx = statusFlow.indexOf(task.status);
-                task.status = statusFlow[(currentIdx + 1) % statusFlow.length];
-                return task.status;
-            }
+        // Função para expandir o código (adicionando métodos de busca)
+        searchTasksByQuery: (query) => {
+            return tasks.filter(t => t.title.toLowerCase().includes(query.toLowerCase()));
         },
 
-        addNewTask: (taskObj) => {
-            const newId = `TASK-${Math.floor(Math.random() * 9000) + 1000}`;
-            tasks.push({ id: newId, ...taskObj });
-            return newId;
-        },
-
-        getOfficeConfig: () => config
+        overrideTasks: (newTasks) => { tasks = newTasks; }
     };
 })();
-
-console.log("Módulo de Dados BSC carregado com sucesso.");
