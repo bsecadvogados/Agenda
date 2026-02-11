@@ -2,88 +2,132 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>BSC Advogados | ERP Strategos v10.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BSC Advogados | ERP Strategos Enterprise</title>
+    <meta name="description" content="Sistema de Gestão Jurídica de Alta Performance">
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-    <style>
-        :root { --gold: #c5a059; --black: #050505; }
-        body { font-family: 'Montserrat', sans-serif; background: var(--black); color: white; overflow: hidden; }
-
-        /* Background Dinâmico com a imagem Agro Expert Group */
-        .agro-viewport {
-            position: fixed; inset: 0; z-index: -1;
-            background-image: linear-gradient(to right, #050505 320px, rgba(5,5,5,0.85) 100%), 
-                              url('Agro Expert Group — helping you get the harvest.jpg');
-            background-size: cover; background-position: center; filter: brightness(0.85);
-        }
-
-        .shell { display: grid; grid-template-columns: 320px 1fr; height: 100vh; }
-        
-        .sidebar { background: rgba(10, 10, 10, 0.98); border-right: 1px solid rgba(197, 160, 89, 0.15); padding: 40px; display: flex; flex-direction: column; }
-        .content-area { overflow-y: auto; padding: 50px; }
-
-        /* Calendário Realizado */
-        .grid-matrix { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; min-width: 1100px; }
-        .cell-day { background: rgba(20, 20, 20, 0.6); border: 1px solid rgba(255,255,255,0.04); min-height: 220px; border-radius: 18px; padding: 12px; transition: 0.3s; }
-        .cell-day:hover { border-color: var(--gold); background: rgba(197, 160, 89, 0.05); }
-
-        .logo-header { width: 220px; filter: drop-shadow(0 0 10px rgba(197, 160, 89, 0.2)); margin: 0 auto 50px auto; }
-        
-        /* Task Nodes */
-        .node-task { background: rgba(255,255,255,0.03); border-left: 3px solid var(--gold); border-radius: 8px; padding: 10px; margin-bottom: 8px; font-size: 10px; cursor: pointer; transition: 0.2s; }
-        .node-task:hover { background: rgba(255,255,255,0.08); }
-
-        .hidden { display: none; }
-    </style>
+    <link rel="stylesheet" href="Styles.css">
 </head>
-<body>
-    <div class="agro-viewport"></div>
+<body class="antialiased">
 
-    <section id="auth-layer" class="fixed inset-0 z-[100] bg-black flex items-center justify-center">
-        <div class="text-center w-full max-w-sm px-6">
-            <img src="logo.png" class="logo-header animate-pulse">
-            <div class="space-y-4 text-left">
-                <select id="user-input" class="w-full bg-white/5 border border-white/10 p-5 rounded-xl text-xs outline-none focus:border-[#c5a059]">
-                    <option value="IM" class="bg-black">Iago Manguary (Controller)</option>
-                    <option value="AF" class="bg-black">Abimael Francisco (Sócio)</option>
-                    <option value="PS" class="bg-black">Pamella Sakumoto (Sócia)</option>
-                    <option value="GB" class="bg-black">Giovani Barcellos (Sócio)</option>
-                </select>
-                <input type="password" id="pass-input" placeholder="Chave de Segurança" class="w-full bg-white/5 border border-white/10 p-5 rounded-xl text-xs outline-none focus:border-[#c5a059]">
-                <button onclick="AuthController.login()" class="w-full bg-[#c5a059] text-black font-black py-5 rounded-xl uppercase text-[10px] tracking-[4px]">Acessar ERP Strategos</button>
+    <div id="app-background" class="fixed inset-0 z-[-1]"></div>
+    <div class="fixed inset-0 bg-black/80 z-[-1]"></div> <div id="security-layer" class="fixed inset-0 z-[999] flex items-center justify-center backdrop-blur-md transition-all duration-700">
+        <div class="w-full max-w-[400px] bg-[#0a0a0a] border border-[#c5a059]/30 p-10 rounded-3xl shadow-2xl shadow-[#c5a059]/10 transform transition-all hover:scale-[1.01]">
+            <div class="text-center mb-10">
+                <img src="logo.png" alt="BSC Logo" class="w-48 mx-auto mb-6 drop-shadow-lg animate-fade-in">
+                <h1 class="text-[10px] uppercase tracking-[6px] text-[#c5a059] font-bold">Acesso Restrito</h1>
+                <p class="text-[9px] text-gray-500 mt-2 uppercase tracking-widest">Intranet Corporativa v2.0</p>
+            </div>
+
+            <form id="login-form" onsubmit="event.preventDefault(); Auth.attempt();" class="space-y-6">
+                <div class="group">
+                    <label class="block text-[9px] uppercase tracking-widest text-gray-400 mb-2 group-focus-within:text-[#c5a059] transition-colors">Identificação</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-user-shield absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-[#c5a059]"></i>
+                        <select id="login-user" class="w-full bg-[#111] border border-gray-800 text-gray-300 text-xs py-4 pl-12 pr-4 rounded-xl outline-none focus:border-[#c5a059] transition-all appearance-none cursor-pointer">
+                            <option value="" disabled selected>Selecione seu perfil...</option>
+                            </select>
+                        <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-600 text-[10px]"></i>
+                    </div>
+                </div>
+
+                <div class="group">
+                    <label class="block text-[9px] uppercase tracking-widest text-gray-400 mb-2 group-focus-within:text-[#c5a059] transition-colors">Chave de Acesso</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-key absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-[#c5a059]"></i>
+                        <input type="password" id="login-pass" class="w-full bg-[#111] border border-gray-800 text-white text-xs py-4 pl-12 pr-4 rounded-xl outline-none focus:border-[#c5a059] transition-all placeholder-gray-700" placeholder="••••••••••••">
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-gradient-to-r from-[#c5a059] to-[#8e733f] text-[#0a0a0a] font-black py-4 rounded-xl uppercase text-[10px] tracking-[4px] hover:brightness-110 hover:shadow-lg hover:shadow-[#c5a059]/20 transition-all duration-300 transform active:scale-95">
+                    Autenticar
+                </button>
+            </form>
+            
+            <div class="mt-8 text-center border-t border-gray-900 pt-6">
+                <p class="text-[8px] text-gray-600 uppercase tracking-[2px]">BSC Advogados & Associados © 2026</p>
             </div>
         </div>
-    </section>
+    </div>
 
-    <div id="dashboard-shell" class="shell hidden">
-        <aside class="sidebar">
-            <img src="logo.png" class="w-48 mx-auto mb-16 opacity-90">
-            <div id="sidebar-team-injection" class="space-y-6"></div>
-            <div class="mt-auto pt-6 border-t border-white/10 flex items-center gap-4">
-                <img id="user-avatar" class="w-12 h-12 rounded-full border border-[#c5a059] object-cover">
+    <div id="app-interface" class="hidden opacity-0 transition-opacity duration-1000 h-screen w-screen overflow-hidden flex">
+        
+        <aside class="w-[340px] h-full bg-[#080808]/95 backdrop-blur-xl border-r border-[#c5a059]/10 flex flex-col z-50 shadow-2xl">
+            <div class="p-8 text-center border-b border-[#c5a059]/5">
+                <img src="logo.png" class="w-40 mx-auto opacity-90 hover:opacity-100 transition-opacity cursor-pointer">
+            </div>
+
+            <div class="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-8">
+                
                 <div>
-                    <p id="user-name" class="font-black text-[11px] uppercase"></p>
-                    <p id="user-role" class="text-[8px] text-[#c5a059] uppercase"></p>
+                    <h3 class="text-[9px] uppercase tracking-[4px] text-[#c5a059] font-bold mb-6 pl-2 border-l-2 border-[#c5a059]">Sócios Proprietários</h3>
+                    <div id="sidebar-partners" class="space-y-3">
+                        </div>
+                </div>
+
+                <div>
+                    <h3 class="text-[9px] uppercase tracking-[4px] text-[#c5a059] font-bold mb-6 pl-2 border-l-2 border-[#c5a059]">Controller & Advogados</h3>
+                    <div id="sidebar-staff" class="space-y-3">
+                        </div>
+                </div>
+            </div>
+
+            <div class="p-6 bg-[#0c0c0c] border-t border-[#c5a059]/10">
+                <div class="flex items-center gap-4 group cursor-pointer" onclick="Auth.logout()">
+                    <div class="relative">
+                        <img id="user-avatar-display" src="" class="w-12 h-12 rounded-full border border-[#c5a059]/50 object-cover group-hover:border-[#c5a059] transition-all">
+                        <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-black rounded-full animate-pulse"></div>
+                    </div>
+                    <div>
+                        <p id="user-name-display" class="text-white text-[11px] font-bold uppercase tracking-tight group-hover:text-[#c5a059] transition-colors"></p>
+                        <p id="user-role-display" class="text-gray-500 text-[8px] uppercase font-semibold"></p>
+                    </div>
+                    <i class="fa-solid fa-right-from-bracket ml-auto text-gray-600 group-hover:text-red-500 transition-colors"></i>
                 </div>
             </div>
         </aside>
 
-        <main class="content-area">
-            <div class="flex justify-between items-end mb-16">
-                <h2 class="text-6xl font-black italic tracking-tighter uppercase leading-none">Fevereiro <span class="text-[#c5a059]">2026</span></h2>
-                <div class="text-right">
-                    <p id="live-time" class="text-5xl font-extralight tracking-tighter">00:00:00</p>
-                    <p id="live-date" class="text-[10px] uppercase opacity-40 mt-2 font-bold"></p>
+        <main class="flex-1 h-full flex flex-col bg-gradient-to-br from-black/50 to-[#c5a059]/5 relative overflow-hidden">
+            
+            <header class="h-[100px] px-10 flex items-center justify-between border-b border-[#c5a059]/10 bg-black/20 backdrop-blur-sm z-40">
+                <div>
+                    <h2 class="text-4xl font-serif italic text-white">Fevereiro <span class="text-[#c5a059] not-italic font-sans font-black">2026</span></h2>
+                    <div class="flex gap-4 mt-2">
+                        <span class="text-[9px] uppercase tracking-[3px] text-gray-400 bg-white/5 px-2 py-1 rounded">Palmas / TO</span>
+                        <span class="text-[9px] uppercase tracking-[3px] text-gray-400 bg-white/5 px-2 py-1 rounded">Gestão Estratégica</span>
+                    </div>
                 </div>
+
+                <div class="text-right">
+                    <p id="system-clock" class="text-3xl font-thin tracking-widest text-white/90 font-mono">00:00:00</p>
+                    <p id="system-date" class="text-[9px] text-[#c5a059] uppercase tracking-[4px] font-bold mt-1"></p>
+                </div>
+            </header>
+
+            <div class="flex-1 overflow-y-auto custom-scrollbar p-10">
+                <div class="flex justify-between items-center mb-8">
+                    <div class="flex gap-2">
+                        <button onclick="Calendar.filter('all')" class="px-4 py-2 bg-[#c5a059] text-black text-[9px] font-bold uppercase rounded hover:bg-white transition-colors">Todos</button>
+                        <button onclick="Calendar.filter('mine')" class="px-4 py-2 bg-white/5 border border-white/10 text-white text-[9px] font-bold uppercase rounded hover:border-[#c5a059] transition-colors">Meus Prazos</button>
+                        <button onclick="Calendar.filter('urgente')" class="px-4 py-2 bg-red-900/20 border border-red-900/50 text-red-400 text-[9px] font-bold uppercase rounded hover:bg-red-900/40 transition-colors">Urgentes</button>
+                    </div>
+                    <div class="text-[9px] uppercase text-gray-500 tracking-widest">
+                        <i class="fa-solid fa-circle-info mr-2"></i>Arraste os cards para realocar responsáveis
+                    </div>
+                </div>
+
+                <div id="calendar-grid" class="grid grid-cols-7 gap-4 min-w-[1400px]">
+                    </div>
             </div>
-            <div class="grid-matrix" id="calendar-injection"></div>
+
         </main>
     </div>
 
     <script src="Data.js"></script>
     <script src="Engine.js"></script>
-    <script src="AdvancedModules.js"></script>
 </body>
 </html>
