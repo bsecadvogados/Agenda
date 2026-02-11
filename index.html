@@ -3,108 +3,215 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BSC Advogados | ERP Strategos Enterprise v19</title>
+    <title>BSC Advogados | ERP Strategos Enterprise v20 (Monolith)</title>
     
-    <script>
-        window.onerror = function(msg, url, line) {
-            console.error("Erro Crítico:", msg);
-            // Se der erro, remove o loader e mostra o erro
-            const loader = document.getElementById('system-loader');
-            if(loader) loader.innerHTML = `<div style="color:red; text-align:center; padding:20px;">ERRO DE SCRIPT:<br>${msg}<br>Linha: ${line}</div>`;
-        };
-    </script>
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="Styles.css">
+
+    <style>
+        /* =========================================
+           BSC DESIGN SYSTEM (EMBEDDED)
+           ========================================= */
+        :root {
+            --brand-gold: #c5a059;
+            --brand-dark: #1f2937;
+            --bg-light: #f8fafc;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--brand-dark);
+            margin: 0;
+            overflow: hidden; /* App-like feel */
+        }
+
+        /* BACKGROUND */
+        .app-bg {
+            position: fixed; inset: 0; z-index: -1;
+            background-image: url('Agro Expert Group — helping you get the harvest.jpg');
+            background-size: cover; background-position: center;
+            opacity: 0.05; filter: grayscale(100%);
+        }
+
+        /* --- TELAS DE ESTADO (LOADER / LOGIN) --- */
+        .full-screen-overlay {
+            position: fixed; inset: 0; z-index: 9999;
+            background-color: #ffffff;
+            display: flex; flex-direction: column; 
+            align-items: center; justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s;
+        }
+
+        .hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+        /* Loader Animation */
+        .loader-logo { width: 180px; margin-bottom: 2rem; animation: pulse 2s infinite; }
+        .loader-bar { width: 250px; height: 4px; background: #eee; border-radius: 10px; overflow: hidden; }
+        .loader-fill { height: 100%; background: var(--brand-gold); width: 0%; transition: width 0.3s ease; }
+        .loader-text { margin-top: 15px; font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.8; transform: scale(0.98); } }
+
+        /* Login Card */
+        .auth-card {
+            background: white; padding: 40px; width: 100%; max-width: 400px;
+            border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--border-color); text-align: center;
+            transform: translateY(20px); opacity: 0; transition: all 0.5s ease;
+        }
+        .auth-active .auth-card { transform: translateY(0); opacity: 1; }
+
+        .auth-input {
+            width: 100%; padding: 14px; margin-top: 5px; margin-bottom: 15px;
+            border: 1px solid var(--border-color); border-radius: 12px;
+            font-size: 12px; font-weight: 600; outline: none; background: #f8fafc;
+        }
+        .auth-input:focus { border-color: var(--brand-gold); background: white; }
+
+        .btn-gold {
+            width: 100%; padding: 14px; background: var(--brand-gold); color: white;
+            font-weight: 800; text-transform: uppercase; font-size: 11px; letter-spacing: 2px;
+            border-radius: 12px; border: none; cursor: pointer; transition: 0.3s;
+        }
+        .btn-gold:hover { background: #b08d4a; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(197, 160, 89, 0.3); }
+
+        /* --- DASHBOARD UI --- */
+        #dashboard-ui {
+            display: grid; grid-template-columns: 320px 1fr; height: 100vh; width: 100vw;
+            opacity: 0; transition: opacity 1s ease;
+        }
+        .dashboard-visible { opacity: 1 !important; }
+
+        /* Sidebar */
+        .sidebar {
+            background: rgba(255,255,255,0.96); border-right: 1px solid var(--border-color);
+            display: flex; flex-direction: column; padding: 30px; backdrop-filter: blur(10px);
+        }
+        
+        .nav-section { margin-bottom: 30px; }
+        .nav-section h3 { font-size: 10px; font-weight: 800; color: #cbd5e1; text-transform: uppercase; margin-bottom: 15px; border-left: 3px solid var(--brand-gold); padding-left: 10px; }
+        
+        .team-item { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 10px; cursor: pointer; transition: 0.2s; }
+        .team-item:hover { background: #f1f5f9; }
+        .team-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border-color); }
+        .team-name { font-size: 11px; font-weight: 700; color: #334155; text-transform: uppercase; }
+        .team-role { font-size: 8px; font-weight: 700; color: var(--brand-gold); text-transform: uppercase; }
+
+        /* Main Workspace */
+        .workspace { padding: 40px 60px; overflow-y: auto; }
+        
+        /* Header */
+        .top-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; }
+        .page-title { font-family: 'Playfair Display', serif; font-size: 42px; font-weight: 700; font-style: italic; color: #1e293b; }
+        .highlight { color: var(--brand-gold); font-family: 'Montserrat', sans-serif; font-style: normal; }
+        
+        /* Calendar Grid */
+        .week-header { display: grid; grid-template-columns: repeat(7, 1fr); gap: 15px; margin-bottom: 15px; }
+        .week-col { text-align: center; font-size: 10px; font-weight: 800; color: var(--brand-gold); text-transform: uppercase; padding-bottom: 10px; border-bottom: 2px solid var(--border-color); }
+
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 15px; padding-bottom: 100px; min-width: 1200px; }
+        
+        .day-cell {
+            background: white; border: 1px solid var(--border-color); border-radius: 16px;
+            min-height: 240px; padding: 15px; position: relative; transition: 0.3s;
+        }
+        .day-cell:hover { transform: translateY(-5px); border-color: #cbd5e1; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1); z-index: 10; }
+        
+        .day-number { position: absolute; top: 15px; right: 15px; font-family: 'Playfair Display', serif; font-size: 24px; color: #f1f5f9; font-weight: 700; }
+
+        /* Tasks */
+        .task-card {
+            background: #f8fafc; border-left: 3px solid var(--brand-gold);
+            padding: 10px 12px; border-radius: 8px; margin-bottom: 8px;
+            cursor: pointer; transition: 0.2s; position: relative; z-index: 5;
+            border: 1px solid transparent;
+        }
+        .task-card:hover { background: white; border-color: var(--border-color); box-shadow: 0 4px 6px -2px rgba(0,0,0,0.05); transform: scale(1.02); }
+        .task-time { font-size: 9px; font-weight: 800; color: var(--brand-gold); display: block; margin-bottom: 3px; }
+        .task-title { font-size: 10px; font-weight: 600; color: #334155; line-height: 1.3; }
+        .task-owner { font-size: 8px; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-top: 5px; display: block; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    </style>
 </head>
 <body>
 
     <div class="app-bg"></div>
 
-    <div id="system-loader">
-        <div class="loader-content">
-            <img src="logo.png" alt="BSC" class="loader-logo">
-            <h2 class="loader-text">Carregando Inteligência</h2>
-            <div class="loader-bar-bg">
-                <div id="loader-bar" class="loader-bar-fill"></div>
-            </div>
-            <p id="loader-status">Inicializando módulos...</p>
+    <div id="loader-screen" class="full-screen-overlay">
+        <img src="logo.png" alt="BSC" class="loader-logo">
+        <div class="loader-bar">
+            <div id="loader-progress" class="loader-fill"></div>
         </div>
+        <p id="loader-status" class="loader-text">Inicializando...</p>
     </div>
 
-    <div id="auth-modal" class="hidden-start">
+    <div id="login-screen" class="full-screen-overlay hidden">
         <div class="auth-card">
-            <div class="text-center mb-8">
-                <img src="logo.png" class="w-40 mx-auto">
-                <p class="text-[10px] text-gray-400 uppercase tracking-[2px] mt-4 font-bold">Acesso Corporativo</p>
-            </div>
+            <img src="logo.png" width="160" class="mx-auto mb-6">
+            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-[2px] mb-8">Acesso Corporativo</p>
             
-            <div class="space-y-5">
-                <div>
-                    <label class="block text-[10px] uppercase font-bold text-gray-500 mb-1">Identificação</label>
-                    <div class="relative">
-                        <select id="login-user" class="w-full bg-gray-50 border border-gray-200 p-4 rounded-xl text-xs font-bold text-gray-700 outline-none focus:border-[#c5a059]">
-                            <option>Carregando usuários...</option> 
-                        </select>
-                        <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none"></i>
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-[10px] uppercase font-bold text-gray-500 mb-1">Chave de Segurança</label>
-                    <input type="password" id="login-pass" class="w-full bg-gray-50 border border-gray-200 p-4 rounded-xl text-xs outline-none focus:border-[#c5a059]" placeholder="••••••••">
-                </div>
-                <button onclick="Engine.login()" class="w-full bg-[#c5a059] text-white font-bold py-4 rounded-xl uppercase text-[11px] tracking-[3px] hover:bg-[#a68545] shadow-lg transition-all active:scale-95">
-                    Entrar
-                </button>
+            <div class="text-left">
+                <label class="text-[10px] font-bold text-gray-500 uppercase ml-1">Usuário</label>
+                <select id="login-user" class="auth-input cursor-pointer">
+                    </select>
+
+                <label class="text-[10px] font-bold text-gray-500 uppercase ml-1">Senha</label>
+                <input type="password" id="login-pass" class="auth-input" placeholder="••••••••">
+
+                <button onclick="App.login()" class="btn-gold mt-4">Entrar no Sistema</button>
             </div>
         </div>
     </div>
 
-    <div id="main-interface" class="hidden-start">
-        
+    <div id="dashboard-ui">
         <aside class="sidebar">
-            <img src="logo.png" class="w-36 mx-auto mb-10 hover:opacity-80 transition cursor-pointer">
+            <img src="logo.png" width="140" class="mx-auto mb-10 cursor-pointer hover:opacity-80 transition">
             
-            <div class="flex-grow overflow-y-auto custom-scroll pr-2 space-y-8">
-                <div>
-                    <h3 class="text-[10px] uppercase font-bold text-gray-400 mb-4 pl-3 border-l-2 border-[#c5a059]">Sócios</h3>
-                    <div id="list-partners" class="space-y-2"></div>
+            <div class="flex-grow overflow-y-auto pr-2">
+                <div class="nav-section">
+                    <h3>Sócios</h3>
+                    <div id="sidebar-partners"></div>
                 </div>
-                <div>
-                    <h3 class="text-[10px] uppercase font-bold text-gray-400 mb-4 pl-3 border-l-2 border-[#c5a059]">Staff Jurídico</h3>
-                    <div id="list-staff" class="space-y-2"></div>
+                <div class="nav-section">
+                    <h3>Staff Jurídico</h3>
+                    <div id="sidebar-staff"></div>
                 </div>
             </div>
 
-            <div class="mt-6 pt-6 border-t border-gray-100 flex items-center gap-4 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition" onclick="location.reload()">
-                <img id="user-avatar" src="" class="w-10 h-10 rounded-full border border-gray-200 object-cover">
+            <div class="mt-auto pt-6 border-t border-gray-200 flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg" onclick="location.reload()">
+                <img id="user-avatar" src="" class="w-10 h-10 rounded-full object-cover border border-gray-300">
                 <div>
                     <p id="user-name" class="text-[10px] font-bold uppercase text-gray-800"></p>
-                    <p id="user-role" class="text-[8px] text-[#c5a059] font-bold uppercase"></p>
+                    <p id="user-role" class="text-[8px] font-bold uppercase text-[#c5a059]"></p>
                 </div>
-                <i class="fa-solid fa-power-off ml-auto text-gray-300 hover:text-red-500"></i>
+                <i class="fa-solid fa-power-off ml-auto text-gray-400"></i>
             </div>
         </aside>
 
-        <main class="workspace custom-scroll">
-            <header class="flex justify-between items-end mb-12">
+        <main class="workspace">
+            <header class="top-header">
                 <div>
-                    <h1 class="text-5xl font-serif font-bold text-gray-800 italic">Fevereiro <span class="text-[#c5a059] not-italic font-sans">2026</span></h1>
-                    <div class="flex gap-3 mt-3">
-                        <span class="px-3 py-1 bg-white border border-gray-200 rounded text-[9px] font-bold text-gray-500 uppercase tracking-wider">Palmas - TO</span>
-                        <span class="px-3 py-1 bg-white border border-gray-200 rounded text-[9px] font-bold text-gray-500 uppercase tracking-wider">Gestão Estratégica</span>
+                    <h1 class="page-title">Fevereiro <span class="highlight">2026</span></h1>
+                    <div class="flex gap-2 mt-2">
+                        <span class="px-2 py-1 bg-white border border-gray-200 rounded text-[8px] font-bold text-gray-500 uppercase">Palmas - TO</span>
+                        <span class="px-2 py-1 bg-white border border-gray-200 rounded text-[8px] font-bold text-gray-500 uppercase">Gestão Estratégica</span>
                     </div>
                 </div>
                 <div class="text-right">
-                    <p id="clock" class="text-5xl font-light text-gray-700 tracking-tighter tabular-nums">00:00:00</p>
-                    <p id="date" class="text-[10px] font-bold text-[#c5a059] uppercase tracking-[3px] mt-1"></p>
+                    <p id="clock-time" class="text-5xl font-light text-gray-700 tracking-tighter">00:00</p>
+                    <p id="clock-date" class="text-[10px] font-bold text-[#c5a059] uppercase tracking-[2px] mt-1">Carregando...</p>
                 </div>
             </header>
 
             <div class="week-header">
-                <div>Domingo</div><div>Segunda</div><div>Terça</div><div>Quarta</div><div>Quinta</div><div>Sexta</div><div>Sábado</div>
+                <div class="week-col">Domingo</div><div class="week-col">Segunda</div><div class="week-col">Terça</div>
+                <div class="week-col">Quarta</div><div class="week-col">Quinta</div><div class="week-col">Sexta</div><div class="week-col">Sábado</div>
             </div>
 
             <div id="calendar-grid" class="calendar-grid">
@@ -112,26 +219,191 @@
         </main>
     </div>
 
-    <script src="Data.js"></script>
-    <script src="Engine.js"></script>
-    
     <script>
-        setTimeout(function() {
-            const loader = document.getElementById('system-loader');
-            // Se o loader ainda estiver visível após 3.5 segundos...
-            if(loader && loader.style.display !== 'none') {
-                console.warn("Resgate de Sistema Ativado.");
-                loader.style.display = 'none'; // Mata o loader
-                const auth = document.getElementById('auth-modal');
-                auth.style.display = 'flex'; // Força o login
-                auth.style.opacity = '1';
-                
-                // Tenta preencher o login na marra se o Data.js carregou
-                if(typeof DataCore !== 'undefined' && typeof Engine !== 'undefined') {
-                    Engine.populateLogin();
+        /**
+         * BSC ADVOGADOS - CORE SYSTEM (MONOLITH)
+         * Evita erros de carregamento externo.
+         */
+
+        // 1. DADOS (DATA CORE)
+        const DataBase = {
+            team: {
+                partners: [
+                    { id: "AF", name: "Abimael Francisco", role: "Sócio Proprietário", avatar: "abimael.jpg", dept: "Agro" },
+                    { id: "PS", name: "Pamella Sakumoto", role: "Sócia Proprietária", avatar: "pamella.jpg", dept: "Cível" },
+                    { id: "GB", name: "Giovani Barcellos", role: "Sócio Proprietário", avatar: "giovani.jpg", dept: "Ambiental" }
+                ],
+                staff: [
+                    { id: "IM", name: "Iago Manguary", role: "Controller Jurídico", avatar: "iago.jpg", dept: "Gestão" },
+                    { id: "GE", name: "Geovana Alexassandra", role: "Advogada", avatar: "geovana.jpg", dept: "Jurídico" },
+                    { id: "FS", name: "Felipe dos Santos", role: "Advogado", avatar: "felipe.jpg", dept: "Jurídico" }
+                ],
+                admin: { id: "BSC_GERAL", name: "Administração", role: "Master", avatar: "logo.png" }
+            },
+            tasks: [
+                { day: 2, owner: "GE", time: "09:15", title: "Audiência Conciliação - Rafael Zanini x Antonio Mendes", status: "pendente" },
+                { day: 2, owner: "AF", time: "16:30", title: "Impugnar Sentença - TAUILE x SANNA", status: "urgente" },
+                { day: 3, owner: "FS", time: "14:00", title: "Reunião - Souzamaas", status: "iniciado" },
+                { day: 3, owner: "GE", time: "15:30", title: "Defesa Prévia - BRAGA BORGES", status: "pendente" },
+                { day: 4, owner: "IM", time: "07:00", title: "Reunião BNI Jalapão", status: "concluido" },
+                { day: 4, owner: "IM", time: "09:30", title: "Emissão Boletos - JK BUSINESS", status: "pendente" },
+                { day: 4, owner: "IM", time: "Dia Inteiro", title: "Viagem LUÍS EDUARDO MAGALHÃES", status: "iniciado" },
+                { day: 4, owner: "AF", time: "08:30", title: "Redistribuir Proc. - ZANINI x ALESSANDRO", status: "pendente" },
+                { day: 5, owner: "GB", time: "08:00", title: "Reunião RAFAEL ZANINI - LEM", status: "pendente" },
+                { day: 5, owner: "IM", time: "11:00", title: "BNI - Módulo Treinamento", status: "concluido" },
+                { day: 6, owner: "IM", time: "Dia Inteiro", title: "Inauguração Escritório AUBE", status: "pendente" },
+                { day: 6, owner: "FS", time: "08:30", title: "Informar Endereço - ZANINI", status: "pendente" },
+                { day: 7, owner: "IM", time: "Dia Inteiro", title: "Dia de Campo - OILEMA", status: "concluido" },
+                { day: 10, owner: "FS", time: "08:30", title: "Dados Bancários - JESSICA YUMIKO", status: "iniciado" },
+                { day: 10, owner: "GE", time: "11:30", title: "Juntar Custas - ZANINI", status: "pendente" },
+                { day: 13, owner: "GE", time: "09:30", title: "Impugnar Cálculo - TAUILE x SANNA", status: "urgente" },
+                { day: 24, owner: "GE", time: "Dia Inteiro", title: "Julgamento Recurso - Motz x NB", status: "pendente" }
+            ],
+            getAllUsers: function() { return [...this.team.partners, ...this.team.staff, this.team.admin]; },
+            getUserById: function(id) { return this.getAllUsers().find(u => u.id === id); },
+            getTasks: function(day) { return this.tasks.filter(t => t.day === day); }
+        };
+
+        // 2. APLICAÇÃO (ENGINE)
+        const App = {
+            dom: {}, // Cache
+
+            init: function() {
+                console.log("Sistema Iniciando...");
+                this.cacheDOM();
+                this.populateLogin();
+                this.runLoader();
+            },
+
+            cacheDOM: function() {
+                this.dom = {
+                    loader: document.getElementById('loader-screen'),
+                    bar: document.getElementById('loader-progress'),
+                    status: document.getElementById('loader-status'),
+                    login: document.getElementById('login-screen'),
+                    dashboard: document.getElementById('dashboard-ui'),
+                    userSelect: document.getElementById('login-user'),
+                    userPass: document.getElementById('login-pass'),
+                    partnersList: document.getElementById('sidebar-partners'),
+                    staffList: document.getElementById('sidebar-staff'),
+                    grid: document.getElementById('calendar-grid'),
+                    profileName: document.getElementById('user-name'),
+                    profileRole: document.getElementById('user-role'),
+                    profileImg: document.getElementById('user-avatar'),
+                    clockTime: document.getElementById('clock-time'),
+                    clockDate: document.getElementById('clock-date')
+                };
+            },
+
+            runLoader: function() {
+                let width = 0;
+                const timer = setInterval(() => {
+                    width += 2; // Rapidez
+                    this.dom.bar.style.width = width + '%';
+                    
+                    if(width > 30) this.dom.status.innerText = "Carregando módulos jurídicos...";
+                    if(width > 70) this.dom.status.innerText = "Sincronizando agenda...";
+
+                    if(width >= 100) {
+                        clearInterval(timer);
+                        this.showLogin();
+                    }
+                }, 30);
+            },
+
+            populateLogin: function() {
+                const users = DataBase.getAllUsers();
+                this.dom.userSelect.innerHTML = users.map(u => 
+                    `<option value="${u.id}">${u.name} - ${u.role}</option>`
+                ).join('');
+            },
+
+            showLogin: function() {
+                this.dom.loader.classList.add('hidden');
+                this.dom.login.classList.remove('hidden');
+                setTimeout(() => this.dom.login.classList.add('auth-active'), 50);
+            },
+
+            login: function() {
+                const id = this.dom.userSelect.value;
+                const pass = this.dom.userPass.value;
+                const user = DataBase.getUserById(id);
+
+                if(pass === "123" || id === "BSC_GERAL") {
+                    this.dom.login.classList.add('hidden');
+                    this.dom.dashboard.classList.add('dashboard-visible');
+                    this.setupDashboard(user);
+                } else {
+                    alert("Senha Incorreta (Padrão: 123)");
                 }
+            },
+
+            setupDashboard: function(user) {
+                // Perfil
+                this.dom.profileName.innerText = user.name;
+                this.dom.profileRole.innerText = user.role;
+                this.dom.profileImg.src = user.avatar;
+
+                // Sidebar
+                this.dom.partnersList.innerHTML = DataBase.team.partners.map(u => this.createSidebarItem(u)).join('');
+                this.dom.staffList.innerHTML = DataBase.team.staff.map(u => this.createSidebarItem(u)).join('');
+
+                // Calendário
+                this.renderCalendar(user.id);
+
+                // Relógio
+                this.startClock();
+            },
+
+            createSidebarItem: function(u) {
+                return `
+                    <div class="team-item">
+                        <img src="${u.avatar}" class="team-avatar">
+                        <div>
+                            <p class="team-name">${u.name}</p>
+                            <p class="team-role">${u.dept}</p>
+                        </div>
+                    </div>
+                `;
+            },
+
+            renderCalendar: function(userId) {
+                this.dom.grid.innerHTML = '';
+                for(let i=1; i<=28; i++) {
+                    const tasks = DataBase.getTasks(i);
+                    let tasksHtml = tasks.map(t => {
+                        let color = '#c5a059'; // Padrão
+                        if(t.status === 'urgente') color = '#ef4444';
+                        if(t.status === 'concluido') color = '#10b981';
+                        
+                        return `
+                            <div class="task-card" style="border-left-color: ${color}">
+                                <span class="task-time" style="color: ${color}">${t.time}</span>
+                                <p class="task-title">${t.title}</p>
+                                <span class="task-owner">${t.owner}</span>
+                            </div>
+                        `;
+                    }).join('');
+
+                    const cell = document.createElement('div');
+                    cell.className = 'day-cell';
+                    cell.innerHTML = `<span class="day-number">${i}</span>${tasksHtml}`;
+                    this.dom.grid.appendChild(cell);
+                }
+            },
+
+            startClock: function() {
+                setInterval(() => {
+                    const now = new Date();
+                    this.dom.clockTime.innerText = now.toLocaleTimeString('pt-BR');
+                    this.dom.clockDate.innerText = now.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
+                }, 1000);
             }
-        }, 3500);
+        };
+
+        // Inicialização Segura
+        window.addEventListener('load', () => App.init());
+
     </script>
 </body>
 </html>
