@@ -1,123 +1,144 @@
-/* BSC DESIGN SYSTEM v14.0 (LIGHT MODE) */
+/* BSC ADVOGADOS - STYLE SYSTEM v17.0 */
 
-/* Scrollbar Customizada */
-.custom-scrollbar::-webkit-scrollbar { width: 6px; }
-.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-.custom-scrollbar::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 10px; }
-.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #c5a059; }
-
-/* Animações Keyframes */
-@keyframes pulse-slow {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.8; transform: scale(0.95); }
+:root {
+    --gold: #c5a059;
+    --dark: #1f2937;
+    --light: #f8fafc;
+    --border: #e2e8f0;
 }
-.animate-pulse-slow { animation: pulse-slow 3s infinite ease-in-out; }
 
-@keyframes blob {
-    0% { transform: translate(0px, 0px) scale(1); }
-    33% { transform: translate(30px, -50px) scale(1.1); }
-    66% { transform: translate(-20px, 20px) scale(0.9); }
-    100% { transform: translate(0px, 0px) scale(1); }
+body {
+    background-color: var(--light);
+    color: var(--dark);
+    margin: 0;
+    overflow: hidden;
+    font-family: 'Montserrat', sans-serif;
 }
-.animate-blob { animation: blob 7s infinite; }
 
-/* Cabeçalho do Dia */
-.day-head {
+/* Background */
+.app-background {
+    position: fixed; inset: 0; z-index: -1;
+    background-image: url('Agro Expert Group — helping you get the harvest.jpg');
+    background-size: cover; background-position: center;
+    opacity: 0.05; filter: grayscale(100%);
+}
+
+/* UTILITÁRIOS DE VISIBILIDADE (CRÍTICO) */
+.hidden-force {
+    display: none !important;
+    opacity: 0;
+}
+.flex-force {
+    display: flex !important;
+    opacity: 1;
+}
+.grid-force {
+    display: grid !important;
+    opacity: 1;
+}
+
+/* LOADER */
+#system-loader {
+    position: fixed; inset: 0; z-index: 9999;
+    background: white;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    transition: opacity 0.5s ease;
+}
+
+.loader-logo { width: 180px; margin-bottom: 20px; animation: pulse 2s infinite; }
+.loader-title { font-size: 12px; font-weight: 700; color: #cbd5e1; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 20px; }
+.loader-track { width: 300px; height: 4px; background: #f1f5f9; border-radius: 10px; overflow: hidden; }
+.loader-fill { height: 100%; width: 0%; background: var(--gold); transition: width 0.3s ease; }
+#loader-status { margin-top: 15px; font-size: 10px; color: #94a3b8; font-weight: 600; text-transform: uppercase; }
+
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; transform: scale(0.98); } }
+
+/* LOGIN SCREEN */
+#auth-screen {
+    position: fixed; inset: 0; z-index: 5000;
+    background: rgba(255,255,255,0.8); backdrop-filter: blur(10px);
+    display: none; /* Controlado via JS/CSS */
+    align-items: center; justify-content: center;
+    transition: opacity 0.5s ease;
+}
+
+.auth-card {
+    background: white; padding: 40px; width: 100%; max-width: 400px;
+    border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border);
     text-align: center;
-    font-size: 10px;
-    font-weight: 800;
-    text-transform: uppercase;
-    color: #c5a059;
-    letter-spacing: 2px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #f3f4f6;
 }
 
-/* Célula do Calendário */
-.calendar-cell {
-    background: #ffffff;
-    border: 1px solid #f3f4f6;
-    border-radius: 16px;
-    min-height: 240px;
-    padding: 15px;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+.auth-logo { width: 160px; margin: 0 auto 20px auto; }
+.auth-subtitle { font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin-bottom: 30px; }
+
+.input-group { text-align: left; margin-bottom: 20px; }
+.input-group label { display: block; font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 5px; text-transform: uppercase; }
+
+.select-wrapper { position: relative; }
+.select-wrapper select, .input-group input {
+    width: 100%; padding: 15px; background: #f8fafc; border: 1px solid var(--border);
+    border-radius: 12px; font-size: 12px; font-weight: 600; color: #334155;
+    outline: none; appearance: none;
+}
+.select-wrapper select:focus, .input-group input:focus { border-color: var(--gold); background: white; }
+.select-wrapper i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 10px; }
+
+.btn-login {
+    width: 100%; padding: 15px; background: var(--gold); color: white;
+    font-weight: 800; text-transform: uppercase; font-size: 11px; letter-spacing: 2px;
+    border-radius: 12px; border: none; cursor: pointer; transition: 0.3s;
+}
+.btn-login:hover { background: #b08d4a; transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(197, 160, 89, 0.3); }
+
+/* DASHBOARD */
+#dashboard-ui {
+    display: none; grid-template-columns: 320px 1fr; height: 100vh;
 }
 
-.calendar-cell:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
-    border-color: #c5a059;
-    z-index: 10;
-}
+/* Sidebar */
+.sidebar { background: rgba(255,255,255,0.95); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 30px; }
+.sidebar-header { text-align: center; margin-bottom: 40px; }
+.sidebar-logo { width: 140px; }
 
-/* Número do Dia */
-.day-number {
-    font-family: 'Playfair Display', serif;
-    font-size: 24px;
-    color: #f3f4f6;
-    font-weight: 700;
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    z-index: 0;
-    transition: 0.3s;
-}
+.nav-section h3 { font-size: 10px; font-weight: 800; color: #cbd5e1; text-transform: uppercase; margin-bottom: 15px; padding-left: 10px; border-left: 3px solid var(--gold); }
+.nav-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 30px; }
 
-.calendar-cell:hover .day-number { color: #c5a059; opacity: 0.2; }
+.team-item { display: flex; align-items: center; gap: 12px; padding: 8px; border-radius: 10px; cursor: pointer; transition: 0.2s; }
+.team-item:hover { background: #f1f5f9; }
+.team-avatar { width: 36px; height: 36px; border-radius: 50%; object-cover: cover; border: 1px solid var(--border); }
+.team-name { font-size: 11px; font-weight: 700; color: #334155; text-transform: uppercase; }
+.team-role { font-size: 8px; font-weight: 700; color: var(--gold); text-transform: uppercase; }
 
-/* Card de Tarefa */
-.task-card {
-    position: relative;
-    z-index: 1;
-    background: #f9fafb;
-    border-left: 3px solid #c5a059;
-    border-radius: 8px;
-    padding: 12px;
-    margin-bottom: 8px;
-    cursor: grab;
-    transition: all 0.2s ease;
-    border-top: 1px solid transparent;
-    border-right: 1px solid transparent;
-    border-bottom: 1px solid transparent;
-}
+.sidebar-footer { margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.sidebar-footer:hover .logout-icon { color: #ef4444; }
+.logout-icon { margin-left: auto; color: #cbd5e1; transition: 0.3s; }
 
-.task-card:hover {
-    background: #ffffff;
-    border-color: #e5e7eb;
-    border-left-color: #c5a059;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    transform: scale(1.02);
-}
+/* Main Content */
+.main-content { padding: 40px 60px; overflow-y: auto; }
+.top-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; }
+.page-title { font-family: 'Playfair Display', serif; font-size: 42px; font-weight: 700; font-style: italic; }
+.highlight { color: var(--gold); font-family: 'Montserrat', sans-serif; font-style: normal; }
+.breadcrumbs span { background: white; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border); font-size: 9px; font-weight: 700; color: #94a3b8; text-transform: uppercase; }
 
-.task-card:active { cursor: grabbing; transform: scale(0.98); }
+.clock-widget { text-align: right; }
+#clock-time { font-size: 42px; font-weight: 300; color: #334155; letter-spacing: -2px; line-height: 1; }
+#clock-date { font-size: 10px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; margin-top: 5px; }
 
-/* Badges de Status */
-.status-badge {
-    display: inline-block;
-    font-size: 8px;
-    font-weight: 800;
-    text-transform: uppercase;
-    padding: 2px 6px;
-    border-radius: 4px;
-    float: right;
-}
-.st-pendente { background: #f3f4f6; color: #9ca3af; }
-.st-iniciado { background: #eff6ff; color: #3b82f6; }
-.st-concluido { background: #ecfdf5; color: #10b981; }
-.st-urgente { background: #fef2f2; color: #ef4444; }
+/* Calendar */
+.calendar-wrapper { min-width: 1200px; }
+.week-header { display: grid; grid-template-columns: repeat(7, 1fr); gap: 15px; margin-bottom: 15px; }
+.week-header div { text-align: center; font-size: 11px; font-weight: 800; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; padding-bottom: 10px; border-bottom: 2px solid var(--border); }
 
-/* Sidebar User Item */
-.sidebar-user {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-.sidebar-user:hover { background-color: #f9fafb; }
-.sidebar-user img { transition: 0.3s; }
-.sidebar-user:hover img { border-color: #c5a059; }
+.days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 15px; padding-bottom: 80px; }
+.day-cell { background: white; border: 1px solid var(--border); border-radius: 16px; min-height: 240px; padding: 15px; position: relative; transition: 0.3s; }
+.day-cell:hover { transform: translateY(-5px); border-color: #cbd5e1; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); z-index: 5; }
+.day-number { position: absolute; top: 15px; right: 15px; font-family: 'Playfair Display', serif; font-size: 24px; color: #f1f5f9; font-weight: 700; }
+
+.task-card { background: #f8fafc; border-left: 3px solid var(--gold); padding: 12px; border-radius: 8px; margin-bottom: 8px; cursor: grab; position: relative; z-index: 2; transition: 0.2s; border: 1px solid transparent; }
+.task-card:hover { background: white; border-color: var(--border); box-shadow: 0 4px 6px -2px rgba(0,0,0,0.05); }
+
+.task-time { font-size: 10px; font-weight: 800; color: var(--gold); display: block; margin-bottom: 2px; }
+.task-title { font-size: 10px; font-weight: 600; color: #334155; line-height: 1.3; }
+.task-owner { font-size: 8px; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-top: 5px; display: block; }
