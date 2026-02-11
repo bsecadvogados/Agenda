@@ -2,264 +2,88 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BSC Advogados | Enterprise Legal Management System v3.0</title>
-    
+    <title>BSC Advogados | ERP Strategos v10.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <style>
-        /* * BSC ADVOGADOS - STYLE SYSTEM v3.0 
-         * Definindo paleta de cores institucional e efeitos de profundidade
-         */
-        :root {
-            --bsc-gold: #c5a059;
-            --bsc-gold-dark: #a38446;
-            --bsc-black: #050505;
-            --bsc-glass: rgba(15, 15, 15, 0.95);
-            --transition-smooth: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+        :root { --gold: #c5a059; --black: #050505; }
+        body { font-family: 'Montserrat', sans-serif; background: var(--black); color: white; overflow: hidden; }
 
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--bsc-black);
-            color: #ffffff;
-            margin: 0;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* BACKGROUND AGRO DINÂMICO */
-        .agro-hero {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: linear-gradient(to bottom, rgba(0,0,0,0.92), rgba(0,0,0,0.75), rgba(0,0,0,1)), 
+        /* Background Dinâmico com a imagem Agro Expert Group */
+        .agro-viewport {
+            position: fixed; inset: 0; z-index: -1;
+            background-image: linear-gradient(to right, #050505 320px, rgba(5,5,5,0.85) 100%), 
                               url('Agro Expert Group — helping you get the harvest.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            z-index: -1;
-            transition: var(--transition-smooth);
+            background-size: cover; background-position: center; filter: brightness(0.85);
         }
 
-        /* GLASSMORPHISM ENTERPRISE */
-        .glass-container {
-            background: var(--bsc-glass);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid rgba(197, 160, 89, 0.15);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            border-radius: 1.5rem;
-        }
+        .shell { display: grid; grid-template-columns: 320px 1fr; height: 100vh; }
+        
+        .sidebar { background: rgba(10, 10, 10, 0.98); border-right: 1px solid rgba(197, 160, 89, 0.15); padding: 40px; display: flex; flex-direction: column; }
+        .content-area { overflow-y: auto; padding: 50px; }
 
-        /* ANIMAÇÕES DE CARREGAMENTO */
-        @keyframes bscPulse {
-            0% { opacity: 0.3; transform: scale(0.98); }
-            50% { opacity: 1; transform: scale(1); }
-            100% { opacity: 0.3; transform: scale(0.98); }
-        }
+        /* Calendário Realizado */
+        .grid-matrix { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; min-width: 1100px; }
+        .cell-day { background: rgba(20, 20, 20, 0.6); border: 1px solid rgba(255,255,255,0.04); min-height: 220px; border-radius: 18px; padding: 12px; transition: 0.3s; }
+        .cell-day:hover { border-color: var(--gold); background: rgba(197, 160, 89, 0.05); }
 
-        #bsc-loader {
-            background-color: var(--bsc-black);
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 1s ease-out, visibility 1s;
-        }
-
-        .loader-text {
-            font-family: 'Playfair Display', serif;
-            color: var(--bsc-gold);
-            letter-spacing: 0.2em;
-            animation: bscPulse 2s infinite;
-        }
-
-        /* SISTEMA DE STATUS */
-        .status-pill {
-            font-size: 9px;
-            font-weight: 800;
-            padding: 5px 12px;
-            border-radius: 6px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            transition: var(--transition-smooth);
-        }
-
-        .status-pendente { background: rgba(156, 163, 175, 0.15); color: #9ca3af; border: 1px solid rgba(156, 163, 175, 0.3); }
-        .status-iniciado { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3); }
-        .status-concluido { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
-        .status-urgente { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
-
-        /* CARDS DE TAREFAS */
-        .task-card {
-            cursor: grab;
-            transition: var(--transition-smooth);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-        }
-
-        .task-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--bsc-gold);
-            background: rgba(197, 160, 89, 0.03);
-        }
-
-        .task-card:active { cursor: grabbing; }
-
-        /* ZONAS DE SOLTURA (DROP ZONES) */
-        .drop-zone { transition: var(--transition-smooth); }
-        .drop-zone-active { 
-            background: rgba(197, 160, 89, 0.12) !important; 
-            border: 2px dashed var(--bsc-gold) !important;
-            transform: scale(1.05);
-        }
+        .logo-header { width: 220px; filter: drop-shadow(0 0 10px rgba(197, 160, 89, 0.2)); margin: 0 auto 50px auto; }
+        
+        /* Task Nodes */
+        .node-task { background: rgba(255,255,255,0.03); border-left: 3px solid var(--gold); border-radius: 8px; padding: 10px; margin-bottom: 8px; font-size: 10px; cursor: pointer; transition: 0.2s; }
+        .node-task:hover { background: rgba(255,255,255,0.08); }
 
         .hidden { display: none; }
-        
-        /* CUSTOM SCROLLBAR */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bsc-black); }
-        ::-webkit-scrollbar-thumb { background: var(--bsc-gold); border-radius: 10px; }
     </style>
 </head>
-<body class="min-h-screen">
+<body>
+    <div class="agro-viewport"></div>
 
-    <div class="agro-hero"></div>
-
-    <div id="bsc-loader" class="fixed inset-0">
-        <h1 class="loader-text text-5xl font-bold">BSC ADVOGADOS</h1>
-        <div class="w-48 h-1 bg-white/5 mt-6 rounded-full overflow-hidden">
-            <div id="loader-progress" class="h-full bg-[#c5a059] w-0 transition-all duration-500"></div>
-        </div>
-        <p class="text-[9px] uppercase tracking-[0.6em] mt-4 opacity-30">Iniciando Protocolos Jurídicos</p>
-    </div>
-
-    <section id="login-module" class="flex items-center justify-center min-h-screen p-4 hidden">
-        <div class="glass-container p-12 w-full max-w-lg text-center relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-transparent via-[#c5a059] to-transparent"></div>
-            
-            <img src="logo.png" alt="BSC Advogados" class="h-32 mx-auto mb-10 drop-shadow-2xl">
-            
-            <div class="space-y-6 text-left">
-                <div class="group">
-                    <label class="text-[9px] uppercase text-[#c5a059] font-extrabold tracking-[0.3em] mb-2 block ml-1">Perfil de Acesso</label>
-                    <div class="relative">
-                        <select id="user-select" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl outline-none focus:border-[#c5a059] transition text-sm appearance-none cursor-pointer">
-                            <option value="BSC_GERAL" class="bg-neutral-900">ADMINISTRAÇÃO (Master)</option>
-                            <option value="IM" class="bg-neutral-900">Iago Manguary (Controller)</option>
-                            <option value="AF" class="bg-neutral-900">Abimael Francisco (Sócio)</option>
-                            <option value="PS" class="bg-neutral-900">Pamella Sakumoto (Sócia)</option>
-                            <option value="GB" class="bg-neutral-900">Giovani Barcellos (Sócio)</option>
-                        </select>
-                        <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-[#c5a059] pointer-events-none"></i>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="text-[9px] uppercase text-[#c5a059] font-extrabold tracking-[0.3em] mb-2 block ml-1">Chave de Segurança</label>
-                    <input type="password" id="user-pass" placeholder="••••••••" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl outline-none focus:border-[#c5a059] transition text-sm">
-                </div>
-
-                <button onclick="AuthController.login()" class="w-full bg-gradient-to-r from-[#c5a059] to-[#a38446] text-black font-black py-5 rounded-xl hover:scale-[1.02] transition-all uppercase text-[11px] tracking-[0.4em] shadow-2xl mt-4">
-                    Autenticar no Sistema
-                </button>
+    <section id="auth-layer" class="fixed inset-0 z-[100] bg-black flex items-center justify-center">
+        <div class="text-center w-full max-w-sm px-6">
+            <img src="logo.png" class="logo-header animate-pulse">
+            <div class="space-y-4 text-left">
+                <select id="user-input" class="w-full bg-white/5 border border-white/10 p-5 rounded-xl text-xs outline-none focus:border-[#c5a059]">
+                    <option value="IM" class="bg-black">Iago Manguary (Controller)</option>
+                    <option value="AF" class="bg-black">Abimael Francisco (Sócio)</option>
+                    <option value="PS" class="bg-black">Pamella Sakumoto (Sócia)</option>
+                    <option value="GB" class="bg-black">Giovani Barcellos (Sócio)</option>
+                </select>
+                <input type="password" id="pass-input" placeholder="Chave de Segurança" class="w-full bg-white/5 border border-white/10 p-5 rounded-xl text-xs outline-none focus:border-[#c5a059]">
+                <button onclick="AuthController.login()" class="w-full bg-[#c5a059] text-black font-black py-5 rounded-xl uppercase text-[10px] tracking-[4px]">Acessar ERP Strategos</button>
             </div>
-            
-            <p class="mt-12 text-[8px] opacity-20 uppercase tracking-[0.4em]">Acesso restrito à rede interna BSC Advogados Associados</p>
         </div>
     </section>
 
-    <main id="main-dashboard" class="hidden min-h-screen p-8 lg:p-12 animate-fade">
-        <header class="flex flex-col lg:flex-row justify-between items-center mb-16 border-b border-white/10 pb-12 gap-10">
-            <div class="flex items-center gap-8">
-                <div class="relative">
-                    <img id="header-avatar" src="" class="w-28 h-28 rounded-full border-2 border-[#c5a059] object-cover shadow-2xl shadow-gold/20">
-                    <div class="absolute bottom-2 right-2 w-6 h-6 bg-green-500 border-4 border-[#050505] rounded-full"></div>
-                </div>
+    <div id="dashboard-shell" class="shell hidden">
+        <aside class="sidebar">
+            <img src="logo.png" class="w-48 mx-auto mb-16 opacity-90">
+            <div id="sidebar-team-injection" class="space-y-6"></div>
+            <div class="mt-auto pt-6 border-t border-white/10 flex items-center gap-4">
+                <img id="user-avatar" class="w-12 h-12 rounded-full border border-[#c5a059] object-cover">
                 <div>
-                    <h1 id="display-user-name" class="text-4xl font-extrabold tracking-tighter italic lg:text-5xl">Dr. Usuário</h1>
-                    <p id="display-user-role" class="text-[#c5a059] text-[11px] uppercase tracking-[0.6em] font-bold mt-2">Cargo Institucional</p>
+                    <p id="user-name" class="font-black text-[11px] uppercase"></p>
+                    <p id="user-role" class="text-[8px] text-[#c5a059] uppercase"></p>
                 </div>
             </div>
+        </aside>
 
-            <div class="flex items-center gap-12 bg-white/5 p-6 rounded-2xl border border-white/5">
-                <div class="text-center">
-                    <p id="clock-display" class="text-4xl font-light tracking-tighter text-white/90">00:00:00</p>
-                    <p class="text-[9px] opacity-40 uppercase tracking-[0.4em] mt-1" id="full-date">Data...</p>
-                </div>
-                <div class="h-12 w-[1px] bg-white/10"></div>
-                <button onclick="AuthController.logout()" class="group flex flex-col items-center gap-2">
-                    <div class="w-12 h-12 rounded-full flex items-center justify-center bg-red-500/10 border border-red-500/20 group-hover:bg-red-500 transition-all">
-                        <i class="fa-solid fa-power-off text-red-500 group-hover:text-white"></i>
-                    </div>
-                    <span class="text-[8px] uppercase tracking-widest font-bold opacity-40 group-hover:opacity-100 transition">Encerrar</span>
-                </button>
-            </div>
-        </header>
-
-        <div class="mb-20">
-            <div class="flex items-center gap-4 mb-10">
-                <h3 class="text-[10px] uppercase tracking-[0.5em] text-[#c5a059] font-black italic">Corpo Jurídico e Sócios</h3>
-                <div class="h-[1px] flex-grow bg-white/5"></div>
-            </div>
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-8" id="team-grid">
-                </div>
-        </div>
-
-        <div class="mb-10">
-            <div class="flex justify-between items-end mb-10">
-                <div>
-                    <h3 class="text-[10px] uppercase tracking-[0.5em] text-[#c5a059] font-black italic mb-2">Agenda Estratégica</h3>
-                    <p class="text-[9px] opacity-30 uppercase tracking-[0.2em]">Competência: Fevereiro 2026</p>
-                </div>
-                <div class="flex gap-4">
-                    <div class="relative">
-                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-white/20 text-xs"></i>
-                        <input type="text" id="task-filter" placeholder="Buscar Processo ou Dr..." class="bg-white/5 border border-white/10 px-12 py-3 rounded-full text-xs focus:border-[#c5a059] outline-none transition-all w-64">
-                    </div>
-                    <button class="bg-[#c5a059] text-black px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest hover:brightness-110 transition shadow-lg">
-                        <i class="fa-solid fa-plus mr-2"></i>Novo
-                    </button>
+        <main class="content-area">
+            <div class="flex justify-between items-end mb-16">
+                <h2 class="text-6xl font-black italic tracking-tighter uppercase leading-none">Fevereiro <span class="text-[#c5a059]">2026</span></h2>
+                <div class="text-right">
+                    <p id="live-time" class="text-5xl font-extralight tracking-tighter">00:00:00</p>
+                    <p id="live-date" class="text-[10px] uppercase opacity-40 mt-2 font-bold"></p>
                 </div>
             </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8" id="tasks-feed">
-                </div>
-        </div>
-
-        <footer class="mt-32 text-center border-t border-white/5 pt-12">
-            <img src="logo.png" class="h-12 mx-auto opacity-10 mb-6 grayscale">
-            <p class="text-[9px] opacity-20 uppercase tracking-[0.8em]">BSC Advogados Associados | Inteligência no Agronegócio © 2026</p>
-        </footer>
-    </main>
+            <div class="grid-matrix" id="calendar-injection"></div>
+        </main>
+    </div>
 
     <script src="Data.js"></script>
     <script src="Engine.js"></script>
     <script src="AdvancedModules.js"></script>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            let progress = 0;
-            const progressInterval = setInterval(() => {
-                progress += Math.random() * 20;
-                if(progress >= 100) {
-                    progress = 100;
-                    clearInterval(progressInterval);
-                    setTimeout(() => {
-                        const loader = document.getElementById('bsc-loader');
-                        loader.style.opacity = '0';
-                        setTimeout(() => {
-                            loader.style.visibility = 'hidden';
-                            document.getElementById('login-module').classList.remove('hidden');
-                        }, 1000);
-                    }, 500);
-                }
-                document.getElementById('loader-progress').style.width = progress + '%';
-            }, 200);
-        });
-    </script>
-
 </body>
 </html>
